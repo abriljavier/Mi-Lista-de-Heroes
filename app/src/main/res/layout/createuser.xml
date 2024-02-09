@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/details"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="290dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="104dp"
+        android:layout_marginEnd="61dp"
+        android:layout_marginBottom="547dp"
+        android:fontFamily="@font/amaranth"
+        android:gravity="center"
+        android:text="Crear un usuario"
+        android:textColor="@color/black"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="364dp"
+        android:layout_height="195dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="221dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="315dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/inputUsername"
+            android:layout_width="332dp"
+            android:layout_height="59dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:ems="10"
+            android:fontFamily="@font/amaranth"
+            android:hint="Nombre de usuario"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/inputPassword"
+            android:layout_width="335dp"
+            android:layout_height="54dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="15dp"
+            android:ems="10"
+            android:fontFamily="@font/amaranth"
+            android:hint="Contraseña"
+            android:inputType="text" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/createAccountBtn"
+        android:layout_width="184dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="113dp"
+        android:layout_marginTop="459dp"
+        android:layout_marginEnd="114dp"
+        android:layout_marginBottom="184dp"
+        android:backgroundTint="@color/details"
+        android:fontFamily="@font/amaranth"
+        android:text="Crear cuenta"
+        android:textColor="@color/text"
+        android:textColorLink="@color/details"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/goBackBtn"
+        android:layout_width="184dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="113dp"
+        android:layout_marginTop="547dp"
+        android:layout_marginEnd="114dp"
+        android:layout_marginBottom="96dp"
+        android:backgroundTint="@color/details"
+        android:fontFamily="@font/amaranth"
+        android:text="Volver atrás"
+        android:textColor="@color/text"
+        android:textColorLink="@color/details"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

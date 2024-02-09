@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="primary">#f0f0f0</color>
+    <color name="secondary">#8a2be2</color>
+    <color name="contrast">#ffd700</color>
+    <color name="details">#008000</color>
+    <color name="text">#ffffff</color>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+<!--        <style name="ToolbarStyle" parent="@style/Widget.AppCompat.Toolbar">-->
+<!--            <item name="android:fontFamily">@font/amaranth</item>-->
+<!--        </style>-->
+    </style>
+</resources>

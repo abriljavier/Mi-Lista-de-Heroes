@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/details"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+<!--        app:theme="@style/ToolbarStyle" />-->
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="271dp"
+        android:layout_height="136dp"
+        android:layout_marginStart="74dp"
+        android:layout_marginTop="89dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginBottom="503dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logogris" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="343dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="227dp"
+        android:layout_marginEnd="34dp"
+        android:layout_marginBottom="404dp"
+        android:fontFamily="@font/amaranth"
+        android:gravity="center"
+        android:text="Bienvenido a mi lista de héroes"
+        android:textColor="@color/black"
+        android:textSize="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="364dp"
+        android:layout_height="195dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="408dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="151dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/inputUsername"
+            android:layout_width="332dp"
+            android:layout_height="59dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:ems="10"
+            android:fontFamily="@font/amaranth"
+            android:hint="Nombre de usuario"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/inputPassword"
+            android:layout_width="335dp"
+            android:layout_height="54dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="15dp"
+            android:ems="10"
+            android:fontFamily="@font/amaranth"
+            android:hint="Contraseña"
+            android:inputType="text" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/logInBtn"
+        android:layout_width="138dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="261dp"
+        android:layout_marginTop="601dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="47dp"
+        android:backgroundTint="@color/details"
+        android:fontFamily="@font/amaranth"
+        android:text="Acceder"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/createAccountBtn"
+        android:layout_width="136dp"
+        android:layout_height="79dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="602dp"
+        android:layout_marginEnd="258dp"
+        android:layout_marginBottom="47dp"
+        android:backgroundTint="@color/details"
+        android:fontFamily="@font/amaranth"
+        android:text="Crear cuenta"
+        android:textColor="@color/text"
+        android:textColorLink="@color/details"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="382dp"
+        android:layout_height="59dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="334dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginBottom="338dp"
+        android:fontFamily="@font/amaranth"
+        android:gravity="center"
+        android:text="Tu aplicación para personajes de DnD5e"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
