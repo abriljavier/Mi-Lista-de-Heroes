@@ -4,7 +4,17 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
+import com.abriljavier.milistadeheroes.dataclasses.Attributes
+import com.abriljavier.milistadeheroes.dataclasses.Background
+import com.abriljavier.milistadeheroes.dataclasses.Classe
+import com.abriljavier.milistadeheroes.dataclasses.Features
+import com.abriljavier.milistadeheroes.dataclasses.Level
+import com.abriljavier.milistadeheroes.dataclasses.Race
+import com.abriljavier.milistadeheroes.dataclasses.Traits
+import com.abriljavier.milistadeheroes.dataclasses.Users
 import java.sql.Types.NULL
+import com.google.gson.Gson
 
 
 class DatabaseHelper(context: Context) :
@@ -48,6 +58,7 @@ class DatabaseHelper(context: Context) :
         TODO("No hace falta implementar")
     }
 
+    // USUARIOS
     fun insertUser(user: Users) {
         val db = this.writableDatabase
         val values = ContentValues().apply {
@@ -89,9 +100,72 @@ class DatabaseHelper(context: Context) :
         return rowsAffected > 0
     }
 
+    // RAZAS
+    fun getAllRaces(): List<Race> {
+
+        val gson = Gson()
+
+        val races = mutableListOf<Race>()
+        val db = this.readableDatabase
+        val selectQuery = "SELECT * FROM races"
+        val cursor = db.rawQuery(selectQuery, null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(0)
+                val name = cursor.getString(1)
+                val attributesJson = cursor.getString(2)
+                val attributes = gson.fromJson(attributesJson, Attributes::class.java)
+                val size = cursor.getString(3)
+                val speed = cursor.getInt(4)
+                val languages = cursor.getString(5)
+                val featuresJson = cursor.getString(6)
+                val features = gson.fromJson(featuresJson, Features::class.java)
+                races.add(Race(id, name, attributes, size, speed, languages, features))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return races
+    }
+
+    //CLASES
+    fun getAllClasses(): List<Classe> {
+        val classes = mutableListOf<Classe>()
+        val db = this.readableDatabase
+        val selectQuery = "SELECT * FROM classes"
+        val cursor = db.rawQuery(selectQuery, null)
+
+        if (cursor.moveToFirst()) {
+            do {
+                val classId = cursor.getInt(0)
+                val className = cursor.getString(1)
+                val hitDie = cursor.getString(2)
+                val savingThrowProficiencies = cursor.getString(3)
+                val abilitiesProficiencies = cursor.getString(4)
+                val armorWeaponProficiencies = cursor.getString(5)
+
+                classes.add(Classe(
+                    classId = classId,
+                    className = className,
+                    hitDie = hitDie,
+                    savingThrowProficiencies = savingThrowProficiencies,
+                    abilitiesProficiencies = abilitiesProficiencies,
+                    armorWeaponProficiencies = armorWeaponProficiencies
+                ))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return classes
+    }
+
 }
 
 private fun insertRaces(db: SQLiteDatabase) {
+
+    val gson = Gson()
+
     val races = arrayOf(
         Race(
             id = null, name = "Draconido", attributes = Attributes(
@@ -245,16 +319,21 @@ private fun insertRaces(db: SQLiteDatabase) {
         )
     )
 
-    for (race in races) {
+
+    races.forEach { race ->
+        val attributesJson = gson.toJson(race.attributes)
+        val featuresJson = gson.toJson(race.features)
+
         val values = ContentValues().apply {
             put("race_id", race.id)
             put("race_name", race.name)
-            put("characteristic_boost", race.attributes.toString())
+            put("characteristic_boost", attributesJson)
             put("size", race.size)
             put("speed", race.speed)
             put("languages", race.languages)
-            put("attributes", race.features.toString())
+            put("attributes", featuresJson)
         }
+
         db.insert("races", null, values)
     }
 }
@@ -798,7 +877,7 @@ private fun insertBackgrounds(db: SQLiteDatabase) {
 
 private fun insertClasses(db: SQLiteDatabase) {
     val classes = arrayOf(
-        Class(
+        Classe(
             classId = NULL,
             className = "Barbaro",
             hitDie = "1d12",
@@ -806,7 +885,7 @@ private fun insertClasses(db: SQLiteDatabase) {
             abilitiesProficiencies = "Atletismo, Intimidación, Naturaleza, Percepción, Supervivencia y Trato con Animales. ",
             armorWeaponProficiencies = "Armadura: armadura ligeras y medias, escudos. Armas: armas sencillas y marciales, Herramientas: ninguna"
         ),
-        Class(
+        Classe(
             classId = NULL,
             className = "Bardo",
             hitDie = "1d8",
@@ -814,7 +893,7 @@ private fun insertClasses(db: SQLiteDatabase) {
             abilitiesProficiencies = "3 cualesquiera",
             armorWeaponProficiencies = "Armadura: armaduras ligeras. Armas: armas sencillas, ballestas de mano, espadas cortas, espadas largas y estoques. Herramientas: tres instrumentos musicales a tu elección."
         ),
-        Class(
+        Classe(
             classId = NULL,
             className = "Brujo",
             hitDie = "1d8",
@@ -822,7 +901,7 @@ private fun insertClasses(db: SQLiteDatabase) {
             abilitiesProficiencies = "Conocimiento Arcano Engaño, Historia, Intimidación, Investigación, Naturaleza y Religión.",
             armorWeaponProficiencies = "Armadura: armaduras ligeras. Armas: armas sencillas. Herramientas: ninguna."
         ),
-        Class(
+        Classe(
             classId = NULL,
             className = "Clerigo",
             hitDie = "1d8",
@@ -830,7 +909,7 @@ private fun insertClasses(db: SQLiteDatabase) {
             abilitiesProficiencies = " Historia, Medicina, Perspicacia, Persuasión y Religión",
             armorWeaponProficiencies = "Armadura: armaduras ligeras y medias, escudos. Armas: armas sencillas. Herramientas: ninguna."
         ),
-        Class(
+        Classe(
             classId = NULL,
             className = "Druida",
             hitDie = "1d8",
@@ -838,7 +917,7 @@ private fun insertClasses(db: SQLiteDatabase) {
             abilitiesProficiencies = "Conocimiento Arcano, Medicina, Naturaleza, Percepción, Pers picacia, Re ligión y Trato con Animales",
             armorWeaponProficiencies = "Armadura: armaduras ligeras, armaduras medias y escudos, aunque los druidas nunca llevan armaduras ni escudos hechos de metal. Armas: garrotes, dagas, dardos, jabalinas, mazas, bastones, cimitarras, hoces, hondas y lanzas. Herramientas: útiles de herborista."
         ),
-        Class(
+        Classe(
             classId = NULL,
             className = "Explorador",
             hitDie = "1d10",
@@ -846,7 +925,7 @@ private fun insertClasses(db: SQLiteDatabase) {
             abilitiesProficiencies = "Atletismo, Investigación, Naturaleza, Percepción, Perspicacia, Sigilo, Supervivencia y Trato con Animales",
             armorWeaponProficiencies = "Armadura: armaduras ligeras y medias, escudos. Armas: armas sencillas y marcia les. Herramientas: ninguna"
         ),
-        Class(
+        Classe(
             classId = NULL,
             className = "Guerrero",
             hitDie = "1d10",
@@ -854,7 +933,7 @@ private fun insertClasses(db: SQLiteDatabase) {
             abilitiesProficiencies = "Acrobacias, Atletismo, Historia, Intimidación, Percepción, Perspicacia, Supervivencia Trato con Animales",
             armorWeaponProficiencies = "Armadura: todas las armaduras y escudos. Armas: armas sencillas y marcia les. Herramientas: ninguna. "
         ),
-        Class(
+        Classe(
             classId = NULL,
             className = "Hechicero",
             hitDie = "1d6",
@@ -862,7 +941,7 @@ private fun insertClasses(db: SQLiteDatabase) {
             abilitiesProficiencies = "Conocimiento Arcano, Engaño, Intimidación, Perspicacia, Persuasión y Religión",
             armorWeaponProficiencies = "Armadura: ninguna. Armas: dagas, dardos, hondas, bastones y ballestas ligeras. Herramientas: ninguna."
         ),
-        Class(
+        Classe(
             classId = NULL,
             className = "Mago",
             hitDie = "1d6",
@@ -870,7 +949,7 @@ private fun insertClasses(db: SQLiteDatabase) {
             abilitiesProficiencies = "Conocimiento Arcano, Historia, Investigación, Medicina, Perspicacia y Religión",
             armorWeaponProficiencies = "Armadura: ninguna. Armas: dagas, dardos, hondas, bastones y ballestas ligeras. Herramientas: ninguna"
         ),
-        Class(
+        Classe(
             classId = NULL,
             className = "Monje",
             hitDie = "1d8",
@@ -878,7 +957,7 @@ private fun insertClasses(db: SQLiteDatabase) {
             abilitiesProficiencies = "Acrobacias, Atletismo, Historia, Perspicacia, Religión y Sigilo",
             armorWeaponProficiencies = "Armadura: ninguna. Armas: armas sencillas, espadas cortas. Herramientas: escoge un tipo de herramientas de artesano o un instrumento musical."
         ),
-        Class(
+        Classe(
             classId = NULL,
             className = "Paladin",
             hitDie = "1d10",
@@ -886,7 +965,7 @@ private fun insertClasses(db: SQLiteDatabase) {
             abilitiesProficiencies = "Atletismo, Intimidación, Medicina, Perspicacia, Persuasión y Religión",
             armorWeaponProficiencies = "Armadura: todas las armaduras y escudos. Armas: armas sencillas y marciales. Herramientas: ninguna"
         ),
-        Class(
+        Classe(
             classId = NULL,
             className = "Picaro",
             hitDie = "1d8",

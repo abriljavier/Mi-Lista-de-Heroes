@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:background="@color/details"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView2"
@@ -22,7 +23,6 @@
         android:layout_marginTop="104dp"
         android:layout_marginEnd="61dp"
         android:layout_marginBottom="547dp"
-        android:fontFamily="@font/amaranth"
         android:gravity="center"
         android:text="Crear un usuario"
         android:textColor="@color/black"
@@ -54,7 +54,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginRight="15dp"
             android:ems="10"
-            android:fontFamily="@font/amaranth"
+            android:fontFamily="sans-serif"
             android:hint="Nombre de usuario"
             android:inputType="text" />
 
@@ -66,7 +66,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginRight="15dp"
             android:ems="10"
-            android:fontFamily="@font/amaranth"
+            android:fontFamily="sans-serif"
             android:hint="Contraseña"
             android:inputType="text" />
     </LinearLayout>
@@ -80,9 +80,8 @@
         android:layout_marginEnd="114dp"
         android:layout_marginBottom="184dp"
         android:backgroundTint="@color/details"
-        android:fontFamily="@font/amaranth"
+        android:fontFamily="sans-serif"
         android:text="Crear cuenta"
-        android:textColor="@color/text"
         android:textColorLink="@color/details"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -98,9 +97,8 @@
         android:layout_marginEnd="114dp"
         android:layout_marginBottom="96dp"
         android:backgroundTint="@color/details"
-        android:fontFamily="@font/amaranth"
+        android:fontFamily="sans-serif"
         android:text="Volver atrás"
-        android:textColor="@color/text"
         android:textColorLink="@color/details"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

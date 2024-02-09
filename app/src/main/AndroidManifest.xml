@@ -25,7 +25,9 @@
         <activity android:name=".CreateUserActivity" />
         <activity android:name=".PersonalPageActivity" />
         <activity android:name=".ProfileActivity" />
+        <activity android:name=".CharacterCreationActivity" />
 
     </application>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
 </manifest>
