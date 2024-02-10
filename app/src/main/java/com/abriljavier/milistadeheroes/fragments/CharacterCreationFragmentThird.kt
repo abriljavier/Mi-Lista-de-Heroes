@@ -58,6 +58,8 @@ class CharacterCreationFragmentThird : Fragment() {
     }
 
     private fun goToNextFragment() {
+        println(personaje)
+
         val bundle = Bundle().apply {
             putSerializable("personaje_key", personaje)
         }

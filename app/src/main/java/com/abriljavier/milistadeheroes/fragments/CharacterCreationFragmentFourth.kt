@@ -66,6 +66,8 @@ class CharacterCreationFragmentFourth : Fragment() {
     }
 
     private fun goToNextFragment() {
+
+        println(personaje)
         val nextFragment = CharacterCreationFragmentFifth()
 
         val bundle = Bundle().apply {

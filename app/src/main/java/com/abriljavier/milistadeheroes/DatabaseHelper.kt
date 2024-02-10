@@ -8,8 +8,10 @@ import android.util.Log
 import com.abriljavier.milistadeheroes.dataclasses.Attributes
 import com.abriljavier.milistadeheroes.dataclasses.Background
 import com.abriljavier.milistadeheroes.dataclasses.Classe
+import com.abriljavier.milistadeheroes.dataclasses.Feature
 import com.abriljavier.milistadeheroes.dataclasses.Features
 import com.abriljavier.milistadeheroes.dataclasses.Level
+import com.abriljavier.milistadeheroes.dataclasses.Personaje
 import com.abriljavier.milistadeheroes.dataclasses.Race
 import com.abriljavier.milistadeheroes.dataclasses.Traits
 import com.abriljavier.milistadeheroes.dataclasses.Users
@@ -46,6 +48,11 @@ class DatabaseHelper(context: Context) :
         val createClassLevelsTable =
             "CREATE TABLE class_levels (" + "level_id INTEGER PRIMARY KEY AUTOINCREMENT," + "class_id INTEGER NOT NULL," + "level INTEGER NOT NULL," + "feature_name TEXT NOT NULL," + "description TEXT NOT NULL," + "FOREIGN KEY(class_id) REFERENCES classes(class_id) ON DELETE CASCADE ON UPDATE CASCADE)"
         db.execSQL(createClassLevelsTable)
+
+        val createPersonajesTable =
+            "CREATE TABLE personajes (" + "personaje_id INTEGER PRIMARY KEY AUTOINCREMENT, " + "user_id INTEGER NOT NULL, " + "name TEXT NOT NULL, " + "imageUri TEXT, " + "class TEXT, " + "race TEXT, " + "level INTEGER DEFAULT 1, " + "hitPoints INTEGER, "+"competencies TEXT," + "attributes TEXT, " + "alignment TEXT, " + "appearance TEXT, " + "history TEXT, " + "languages TEXT, " + "notes TEXT, " + "FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE" + ")"
+        db.execSQL(createPersonajesTable)
+
 
         insertRaces(db)
         insertBackgrounds(db)
@@ -146,14 +153,16 @@ class DatabaseHelper(context: Context) :
                 val abilitiesProficiencies = cursor.getString(4)
                 val armorWeaponProficiencies = cursor.getString(5)
 
-                classes.add(Classe(
-                    classId = classId,
-                    className = className,
-                    hitDie = hitDie,
-                    savingThrowProficiencies = savingThrowProficiencies,
-                    abilitiesProficiencies = abilitiesProficiencies,
-                    armorWeaponProficiencies = armorWeaponProficiencies
-                ))
+                classes.add(
+                    Classe(
+                        classId = classId,
+                        className = className,
+                        hitDie = hitDie,
+                        savingThrowProficiencies = savingThrowProficiencies,
+                        abilitiesProficiencies = abilitiesProficiencies,
+                        armorWeaponProficiencies = armorWeaponProficiencies
+                    )
+                )
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -187,6 +196,104 @@ class DatabaseHelper(context: Context) :
         cursor.close()
         db.close()
         return backgrounds
+    }
+
+    // NIVELES
+    fun getFeaturesByClassIdAndLevel(classId: Int, level: Int): List<Feature> {
+        val db = this.readableDatabase
+        val featuresList = mutableListOf<Feature>()
+        val selectQuery =
+            "SELECT * FROM class_levels WHERE class_id = ? AND level <= ? ORDER BY level ASC"
+
+        db.rawQuery(selectQuery, arrayOf(classId.toString(), level.toString())).use { cursor ->
+            while (cursor.moveToNext()) {
+                val featureName = cursor.getString(cursor.getColumnIndexOrThrow("feature_name"))
+                val description = cursor.getString(cursor.getColumnIndexOrThrow("description"))
+                featuresList.add(Feature(featureName, description))
+            }
+        }
+
+        return featuresList
+    }
+
+    //PERSONAJES
+    fun addPersonaje(personaje: Personaje, userId: Int) {
+        val gson = Gson()
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put("user_id", userId)
+            put("name", personaje.name)
+            put("imageUri", personaje.imageUri)
+            put("class", personaje.characterClass?.className)
+            put("race", personaje.race?.name)
+            put("level", personaje.numLevel)
+            put("hitPoints", personaje.hitPoints)
+            val attributesJson = gson.toJson(personaje.attributes)
+            put("attributes", attributesJson)
+            val competenciesJson = gson.toJson(personaje.competiences)
+            put("competencies", competenciesJson)
+            put ("alignment", personaje.selectedAligment)
+            put("history", personaje.history)
+            put("languages", personaje.languages)
+            put("notes", personaje.notes)
+        }
+
+        val personajeId = db.insert("personajes", null, values)
+        db.close()
+    }
+
+    fun getPersonajesByUserId(userId: Int): List<Personaje> {
+        val list = mutableListOf<Personaje>()
+        val db = this.readableDatabase
+        val cursor = db.query(
+            "personajes",
+            null,
+            "user_id=?",
+            arrayOf(userId.toString()),
+            null,
+            null,
+            null
+        )
+
+        if (cursor.moveToFirst()) {
+            do {
+                val name = cursor.getString(2)
+                val imageUri = cursor.getString(3)
+                val className = cursor.getString(4)
+                val race = cursor.getString(5)
+                val level = cursor.getInt(6)
+                val hitPoints = cursor.getInt(7)
+                val competencies = cursor.getString(8)
+                val attributesJson = cursor.getString(9)
+                val alignment = cursor.getString(10)
+                val appearance = cursor.getString(11)
+                val history = cursor.getString(12)
+                val languages = cursor.getString(13)
+                val notes = cursor.getString(14)
+
+                val gson = Gson()
+                val attributes = gson.fromJson(attributesJson, Attributes::class.java)
+
+                list.add(Personaje(
+                    name = name,
+                    imageUri = imageUri,
+                    characterClass = Classe(className = className),
+                    race = Race(name = race),
+                    numLevel = level,
+                    hitPoints = hitPoints,
+                    competiences = mutableListOf(competencies),
+                    attributes = attributes,
+                    selectedAligment = alignment,
+                    appearance = appearance,
+                    history = history,
+                    languages = languages,
+                    notes = notes
+                ))
+                println(list)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return list
     }
 }
 

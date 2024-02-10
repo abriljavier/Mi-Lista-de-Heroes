@@ -6,7 +6,7 @@
     android:layout_height="665dp">
 
     <Button
-        android:id="@+id/forwardBtn"
+        android:id="@+id/finishBtn"
         android:layout_width="196dp"
         android:layout_height="77dp"
         android:layout_marginStart="106dp"
@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextNumber2"
+        android:id="@+id/pgInput"
         android:layout_width="378dp"
         android:layout_height="65dp"
         android:layout_marginStart="17dp"
@@ -56,13 +56,14 @@
         android:layout_width="378dp"
         android:layout_height="65dp"
         android:layout_marginStart="17dp"
-        android:layout_marginTop="389dp"
+        android:layout_marginTop="354dp"
         android:layout_marginEnd="14dp"
-        android:layout_marginBottom="211dp"
-        android:text="Selecciona tus competencias!"
+        android:layout_marginBottom="246dp"
+        android:text="Estas son tus competencias"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -82,7 +83,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/rollTheDice"
         android:layout_width="140dp"
         android:layout_height="70dp"
         android:layout_marginStart="134dp"
@@ -95,17 +96,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="378dp"
-        android:layout_height="65dp"
+    <LinearLayout
+        android:id="@+id/competenciasLayout"
+        android:layout_width="382dp"
+        android:layout_height="152dp"
         android:layout_marginStart="17dp"
-        android:layout_marginTop="454dp"
-        android:layout_marginEnd="14dp"
-        android:layout_marginBottom="146dp"
+        android:layout_marginTop="419dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="94dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

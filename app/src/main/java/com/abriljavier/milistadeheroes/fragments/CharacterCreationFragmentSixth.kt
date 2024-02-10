@@ -22,7 +22,7 @@ class CharacterCreationFragmentSixth : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_character_creation_fifth, container, false)
+        val view = inflater.inflate(R.layout.fragment_character_creation_sixth, container, false)
 
         personaje = (arguments?.getSerializable("personaje_key") as? Personaje)!!
 
@@ -76,6 +76,9 @@ class CharacterCreationFragmentSixth : Fragment() {
         return view
     }
     private fun goToNextFragment() {
+
+        println(personaje)
+
         val nextFragment = CharacterCreationFragmentSeventh()
 
         val bundle = Bundle().apply {

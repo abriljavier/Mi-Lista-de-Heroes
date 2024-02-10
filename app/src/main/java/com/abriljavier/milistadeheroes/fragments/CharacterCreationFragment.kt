@@ -67,6 +67,8 @@ class CharacterCreationFragment : Fragment() {
             }
             val personaje = Personaje(name = nameText, race = selectedRace)
 
+            println(personaje)
+
             val bundle = Bundle().apply {
                 putSerializable("personaje_key", personaje)
             }

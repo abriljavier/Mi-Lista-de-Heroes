@@ -1,5 +1,6 @@
 package com.abriljavier.milistadeheroes
 
+import CharacterAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -8,10 +9,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 private lateinit var toolbar: Toolbar
 
 class PersonalPageActivity : AppCompatActivity() {
+
+    private lateinit var charactersRecyclerView: RecyclerView
+    private lateinit var characterAdapter: CharacterAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main)
@@ -22,14 +28,23 @@ class PersonalPageActivity : AppCompatActivity() {
         val welcomeMsg = findViewById<TextView>(R.id.welcomeMsg)
 
         val userName = intent.getStringExtra("user_name")
-        val userPass = intent.getStringExtra("user_password")
-        val userData = intent.getStringExtra("user_data")
 
-        if (userData.isNullOrEmpty()){
+        charactersRecyclerView = findViewById(R.id.recycleView)
+        charactersRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        val dbHelper = DatabaseHelper(this)
+        val userId = intent.getIntExtra("user_id", -1)
+        println(userId)
+        val characters = dbHelper.getPersonajesByUserId(userId)
+        println(characters)
+        if (characters.isEmpty()){
             welcomeMsg.text = "Bienvenido $userName, todavía no tienes personajes, comienza creando uno"
         } else {
             welcomeMsg.text = "Bienvenido $userName, selecciona uno de tus personajes"
+            characterAdapter = CharacterAdapter(characters)
+            charactersRecyclerView.adapter = characterAdapter
         }
+
 
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

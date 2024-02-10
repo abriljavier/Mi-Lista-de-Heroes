@@ -38,7 +38,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/forwardBtn"
+        android:id="@+id/forwardBtn231"
         android:layout_width="196dp"
         android:layout_height="77dp"
         android:layout_marginStart="106dp"
@@ -54,7 +54,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/historyInput"
         android:layout_width="378dp"
         android:layout_height="233dp"
         android:layout_marginStart="16dp"
@@ -70,7 +70,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextNumber"
+        android:id="@+id/ageInput"
         android:layout_width="378dp"
         android:layout_height="65dp"
         android:layout_marginStart="16dp"

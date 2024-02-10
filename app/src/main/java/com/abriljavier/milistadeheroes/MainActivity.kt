@@ -133,7 +133,14 @@ private fun showSeeMoreDialog(context: Context) {
 }
 
 private fun openPersonalPage(context: Context, user: Users) {
+    val sharedPref = context.getSharedPreferences("MyAppPreferences", Context.MODE_PRIVATE)
+    with(sharedPref.edit()) {
+        user.user_id?.let { putInt("user_id", it) }
+        apply()
+    }
+
     val intent = Intent(context, PersonalPageActivity::class.java)
+    intent.putExtra("user_id", user.user_id)
     intent.putExtra("user_name", user.username)
     intent.putExtra("user_password", user.password)
     intent.putExtra("user_data", user.pc_id)

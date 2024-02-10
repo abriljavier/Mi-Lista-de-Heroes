@@ -60,6 +60,7 @@ class CharacterCreationFragmentFifth : Fragment() {
                 parent: AdapterView<*>, view: View, position: Int, id: Long
             ) {
                 val selectedIdealValue = idealsList[position]
+                println(selectedIdealValue)
                 personaje.selectedIdeal = selectedIdealValue
             }
 
@@ -76,6 +77,9 @@ class CharacterCreationFragmentFifth : Fragment() {
         return view
     }
     private fun goToNextFragment() {
+
+        println(personaje)
+
         val nextFragment = CharacterCreationFragmentSixth()
 
         val bundle = Bundle().apply {

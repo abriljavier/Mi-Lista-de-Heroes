@@ -124,6 +124,8 @@ class CharacterCreationFragmentSecond : Fragment() {
             )
             personaje.characterClass = selectedClasse
 
+            println(personaje)
+
             val bundle = Bundle().apply {
                 putSerializable("personaje_key", personaje)
             }

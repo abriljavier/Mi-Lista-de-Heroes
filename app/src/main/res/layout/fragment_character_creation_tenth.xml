@@ -5,24 +5,22 @@
     android:layout_width="409dp"
     android:layout_height="665dp">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="378dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="75dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="525dp"
-        android:fontFamily="sans-serif"
-        android:text="Esto crear programaticamente las características con un for"
-        android:textSize="20sp"
+    <LinearLayout
+        android:id="@+id/featuresContainer"
+        android:layout_width="407dp"
+        android:layout_height="575dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="89dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
 
     <Button
-        android:id="@+id/forwardBtn"
+        android:id="@+id/forwardBtn445"
         android:layout_width="196dp"
         android:layout_height="77dp"
         android:layout_marginStart="106dp"
@@ -36,5 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
