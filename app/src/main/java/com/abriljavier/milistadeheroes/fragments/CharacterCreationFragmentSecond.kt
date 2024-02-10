@@ -1,5 +1,6 @@
 package com.abriljavier.milistadeheroes.fragments
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,11 +10,13 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.abriljavier.milistadeheroes.DatabaseHelper
 import com.abriljavier.milistadeheroes.R
+import com.abriljavier.milistadeheroes.dataclasses.Attributes
 import com.abriljavier.milistadeheroes.dataclasses.Classe
 import com.abriljavier.milistadeheroes.dataclasses.Personaje
 
@@ -39,6 +42,7 @@ class CharacterCreationFragmentSecond : Fragment() {
         }
         val classesSpinner = view.findViewById<Spinner>(R.id.classesSpinner)
         classesSpinner.adapter = adapter
+        val classIcon = view.findViewById<ImageView>(R.id.classIcon)
 
         //LOS BOTONES DE + Y -
 
@@ -68,6 +72,22 @@ class CharacterCreationFragmentSecond : Fragment() {
         decreaseButtonCHA.setOnClickListener { onDecreaseClickCHA(it) }
         increaseButtonCHA.setOnClickListener { onIncreaseClickCHA(it) }
 
+        // LA IMAGEN QUE ACOMPAÑA AL SPINNER
+        val classImageMap = mapOf<String, Int>(
+            "Barbaro" to R.drawable.barbarian,
+            "Bardo" to R.drawable.bard,
+            "Brujo" to R.drawable.warlock,
+            "Clerigo" to R.drawable.cleric,
+            "Druida" to R.drawable.druid,
+            "Explorador" to R.drawable.explorer,
+            "Guerrero" to R.drawable.warrior,
+            "Hechicero" to R.drawable.sorcerer,
+            "Mago" to R.drawable.wizard,
+            "Monje" to R.drawable.monk,
+            "Paladin" to R.drawable.pala,
+            "Picaro" to R.drawable.rogue,
+        )
+
         // EL SPINNER
 
         classesSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -75,18 +95,45 @@ class CharacterCreationFragmentSecond : Fragment() {
                 parent: AdapterView<*>, view: View, position: Int, id: Long
             ) {
                 selectedClasse = classes[position]
+                val className = selectedClasse?.className
+                val imageResId = classImageMap[className] ?: R.drawable.barbarian
+                classIcon.setImageResource(imageResId)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
                 selectedClasse = classes[0]
+                classIcon.setImageResource(R.drawable.barbarian)
             }
         }
 
         view.findViewById<Button>(R.id.forwardBtn2).setOnClickListener {
 
-            personaje?.let {
-                it.characterClass = selectedClasse
+            val strValue = view.findViewById<EditText>(R.id.attributeValueSTR)?.text.toString().toInt()
+            val dexValue = view.findViewById<EditText>(R.id.attributeValueDEX)?.text.toString().toInt()
+            val conValue = view.findViewById<EditText>(R.id.attributeValueCON)?.text.toString().toInt()
+            val intValue = view.findViewById<EditText>(R.id.attributeValueINT)?.text.toString().toInt()
+            val wisValue = view.findViewById<EditText>(R.id.attributeValueWIS)?.text.toString().toInt()
+            val chaValue = view.findViewById<EditText>(R.id.attributeValueCHA)?.text.toString().toInt()
+            personaje.attributes = Attributes(
+                STR = strValue,
+                DEX = dexValue,
+                CON = conValue,
+                INT = intValue,
+                WIS = wisValue,
+                CHA = chaValue
+            )
+            personaje.characterClass = selectedClasse
+
+            val bundle = Bundle().apply {
+                putSerializable("personaje_key", personaje)
             }
+            val nextFragment = CharacterCreationFragmentThird().apply {
+                arguments = bundle
+            }
+
+            parentFragmentManager.beginTransaction().replace(R.id.frameLayout, nextFragment)
+                .addToBackStack(null)
+                .commit()
 
         }
         return view

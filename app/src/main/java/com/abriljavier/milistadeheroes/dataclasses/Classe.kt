@@ -1,5 +1,7 @@
 package com.abriljavier.milistadeheroes.dataclasses
 
+import java.io.Serializable
+
 data class Classe(
     val classId: Int? = null,
     val className: String? = null,
@@ -7,5 +9,5 @@ data class Classe(
     val savingThrowProficiencies: String? = null,
     val abilitiesProficiencies: String? = null,
     val armorWeaponProficiencies: String? = null
-) {
+) : Serializable {
 }

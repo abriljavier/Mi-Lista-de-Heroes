@@ -15,6 +15,7 @@ import com.abriljavier.milistadeheroes.dataclasses.Traits
 import com.abriljavier.milistadeheroes.dataclasses.Users
 import java.sql.Types.NULL
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 
 class DatabaseHelper(context: Context) :
@@ -160,6 +161,33 @@ class DatabaseHelper(context: Context) :
         return classes
     }
 
+    //TRASFONDOS
+    fun getAllBackgrounds(): List<Background> {
+        val db = this.readableDatabase
+        val backgrounds = mutableListOf<Background>()
+        val gson = Gson()
+        val cursor = db.query("backgrounds", null, null, null, null, null, null)
+
+        while (cursor.moveToNext()) {
+            val traitsJson = cursor.getString(6)
+            val traits = gson.fromJson(traitsJson, Traits::class.java)
+
+            val background = Background(
+                backgroundId = cursor.getInt(0),
+                bgName = cursor.getString(1),
+                competencies = cursor.getString(2),
+                tools = cursor.getString(3),
+                languages = cursor.getInt(4),
+                items = cursor.getString(5),
+                traits = traits
+            )
+
+            backgrounds.add(background)
+        }
+        cursor.close()
+        db.close()
+        return backgrounds
+    }
 }
 
 private fun insertRaces(db: SQLiteDatabase) {
@@ -863,13 +891,17 @@ private fun insertBackgrounds(db: SQLiteDatabase) {
         )
     )
     for (backgroundObj in backgrounds) {
+
+        val gson = Gson()
+        val traitsJson = gson.toJson(backgroundObj.traits)
+
         val values = ContentValues().apply {
             put("bg_name", backgroundObj.bgName)
             put("competencies", backgroundObj.competencies)
             put("tools", backgroundObj.tools)
             put("languages", backgroundObj.languages)
             put("items", backgroundObj.items)
-            put("rasgos", backgroundObj.traits.toString())
+            put("rasgos", traitsJson)
         }
         db.insert("backgrounds", null, values)
     }

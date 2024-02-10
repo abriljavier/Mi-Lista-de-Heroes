@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
-        android:id="@+id/raceSpinner3"
+        android:id="@+id/traitSpinner"
         android:layout_width="378dp"
         android:layout_height="65dp"
         android:layout_marginStart="15dp"
@@ -35,7 +35,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
-        android:id="@+id/classesSpinner"
+        android:id="@+id/idealSpinner"
         android:layout_width="378dp"
         android:layout_height="65dp"
         android:layout_marginStart="15dp"
@@ -64,7 +64,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/forwardBtn"
+        android:id="@+id/forwardBtn12"
         android:layout_width="196dp"
         android:layout_height="77dp"
         android:layout_marginStart="106dp"

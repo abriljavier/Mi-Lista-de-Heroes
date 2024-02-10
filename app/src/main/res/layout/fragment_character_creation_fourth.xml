@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
-        android:id="@+id/raceSpinner2"
+        android:id="@+id/bgspinner"
         android:layout_width="378dp"
         android:layout_height="65dp"
         android:layout_marginStart="15dp"
@@ -35,7 +35,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/helperTextView"
+        android:id="@+id/bgdesc"
         android:layout_width="378dp"
         android:layout_height="258dp"
         android:layout_marginStart="15dp"
@@ -51,7 +51,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/forwardBtn"
+        android:id="@+id/forwardBtn9"
         android:layout_width="196dp"
         android:layout_height="77dp"
         android:layout_marginStart="106dp"
