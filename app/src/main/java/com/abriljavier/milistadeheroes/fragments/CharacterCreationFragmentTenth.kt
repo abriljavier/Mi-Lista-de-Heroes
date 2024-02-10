@@ -15,7 +15,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.abriljavier.milistadeheroes.DatabaseHelper
 import com.abriljavier.milistadeheroes.R
-import com.abriljavier.milistadeheroes.dataclasses.Feature
 import com.abriljavier.milistadeheroes.dataclasses.Personaje
 
 private lateinit var personaje: Personaje
@@ -30,21 +29,19 @@ class CharacterCreationFragmentTenth: Fragment() {
         personaje = arguments?.getSerializable("personaje_key") as? Personaje ?: Personaje()
         val featuresContainer = view.findViewById<LinearLayout>(R.id.featuresContainer)
 
-        // Asume que DatabaseHelper ya tiene implementado getFeaturesByClassIdAndLevel
         val dbHelper = DatabaseHelper(requireContext())
         val classId = personaje.characterClass?.classId ?: 0
         val level = personaje.numLevel ?: 1
 
-        val characterFeatures = dbHelper.getFeaturesByClassIdAndLevel(classId, level)
-        personaje.features.addAll(characterFeatures)
+        val characterFeatures = dbHelper.getFeaturesByClasseAndLevel(classId, level)
 
-        for (feature in personaje.features) {
+        for (feature in characterFeatures) {
             val featureTextView = TextView(context).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
-                text = "${feature.name}: ${feature.description}"
+                text = "${feature.featureName}: ${feature.description}"
             }
 
             featuresContainer.addView(featureTextView)
@@ -60,7 +57,6 @@ class CharacterCreationFragmentTenth: Fragment() {
 
     private fun goToNextFragment() {
 
-        println(personaje)
 
         val nextFragment = CharacterCreationFragmentEleventh()
 

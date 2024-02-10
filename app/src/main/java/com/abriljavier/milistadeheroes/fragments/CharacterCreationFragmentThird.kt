@@ -48,17 +48,22 @@ class CharacterCreationFragmentThird : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 102 && resultCode == Activity.RESULT_OK) {
-            data?.data?.let { uri ->
+            data?.data?.also { uri ->
                 val imageView = view?.findViewById<ImageView>(R.id.avatarImageView)
                 imageView?.setImageURI(uri)
 
                 personaje.imageUri = uri.toString()
+
+                val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                uri.let { contentUri ->
+                    requireContext().contentResolver.takePersistableUriPermission(contentUri, takeFlags)
+                }
             }
         }
     }
 
     private fun goToNextFragment() {
-        println(personaje)
 
         val bundle = Bundle().apply {
             putSerializable("personaje_key", personaje)

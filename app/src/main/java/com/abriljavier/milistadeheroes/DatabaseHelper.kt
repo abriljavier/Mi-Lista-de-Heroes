@@ -8,7 +8,7 @@ import android.util.Log
 import com.abriljavier.milistadeheroes.dataclasses.Attributes
 import com.abriljavier.milistadeheroes.dataclasses.Background
 import com.abriljavier.milistadeheroes.dataclasses.Classe
-import com.abriljavier.milistadeheroes.dataclasses.Feature
+//import com.abriljavier.milistadeheroes.dataclasses.Feature
 import com.abriljavier.milistadeheroes.dataclasses.Features
 import com.abriljavier.milistadeheroes.dataclasses.Level
 import com.abriljavier.milistadeheroes.dataclasses.Personaje
@@ -29,12 +29,9 @@ class DatabaseHelper(context: Context) :
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        val createUserTable =
-            "CREATE TABLE users (" + "user_id INTEGER PRIMARY KEY AUTOINCREMENT," + "username TEXT NOT NULL," + "password TEXT NOT NULL," + "pc_id INTEGER DEFAULT NULL," + "FOREIGN KEY(pc_id) REFERENCES pcs(id) ON UPDATE CASCADE)"
-        db.execSQL(createUserTable)
 
         val createRacesTable =
-            "CREATE TABLE races (" + "race_id INTEGER PRIMARY KEY AUTOINCREMENT," + "race_name TEXT NOT NULL," + "characteristic_boost TEXT NOT NULL," + "size TEXT NOT NULL," + "speed INTEGER NOT NULL," + "languages TEXT NOT NULL," + "attributes TEXT DEFAULT NULL)"
+            "CREATE TABLE races (" + "race_id INTEGER PRIMARY KEY AUTOINCREMENT," + "race_name TEXT NOT NULL," + "attributes TEXT NOT NULL," + "size TEXT NOT NULL," + "speed INTEGER NOT NULL," + "languages TEXT NOT NULL," + "features TEXT DEFAULT NULL)"
         db.execSQL(createRacesTable)
 
         val createBackgroundsTable =
@@ -42,7 +39,7 @@ class DatabaseHelper(context: Context) :
         db.execSQL(createBackgroundsTable)
 
         val createClassesTable =
-            "CREATE TABLE classes (" + "class_id INTEGER PRIMARY KEY AUTOINCREMENT," + "class_name TEXT NOT NULL," + "hit_die TEXT NOT NULL," + "saving_throw_proficiencies TEXT NOT NULL," + "habilities_proficiencies TEXT NOT NULL," + "armor_weapon_proficiencies TEXT NOT NULL)"
+            "CREATE TABLE classes (" + "class_id INTEGER PRIMARY KEY AUTOINCREMENT," + "class_name TEXT NOT NULL," + "hit_die TEXT NOT NULL," + "saving_throw_proficiencies TEXT NOT NULL," + "abilities_proficiencies TEXT NOT NULL," + "armor_weapon_proficiencies TEXT NOT NULL)"
         db.execSQL(createClassesTable)
 
         val createClassLevelsTable =
@@ -50,15 +47,17 @@ class DatabaseHelper(context: Context) :
         db.execSQL(createClassLevelsTable)
 
         val createPersonajesTable =
-            "CREATE TABLE personajes (" + "personaje_id INTEGER PRIMARY KEY AUTOINCREMENT, " + "user_id INTEGER NOT NULL, " + "name TEXT NOT NULL, " + "imageUri TEXT, " + "class TEXT, " + "race TEXT, " + "level INTEGER DEFAULT 1, " + "hitPoints INTEGER, "+"competencies TEXT," + "attributes TEXT, " + "alignment TEXT, " + "appearance TEXT, " + "history TEXT, " + "languages TEXT, " + "notes TEXT, " + "FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE" + ")"
+            "CREATE TABLE personajes (" + "personaje_id INTEGER PRIMARY KEY AUTOINCREMENT, " + "user_id INTEGER NOT NULL, " + "name TEXT NOT NULL, " + "imageUri TEXT, " + "class INT, " + "race INT, " + "level INTEGER DEFAULT 1, " + "hitPoints INTEGER, " + "competencies TEXT, " + "attributes TEXT, " + "alignment TEXT, " + "appearance TEXT, " + "history TEXT, " + "languages TEXT, " + "notes TEXT, " + "background TEXT, " + "age TEXT, " + "FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE, " + "FOREIGN KEY(class) REFERENCES classes(class_id) ON DELETE SET NULL, " + "FOREIGN KEY(race) REFERENCES races(race_id) ON DELETE SET NULL)"
         db.execSQL(createPersonajesTable)
 
+        val createUserTable =
+            "CREATE TABLE users (" + "user_id INTEGER PRIMARY KEY AUTOINCREMENT," + "username TEXT NOT NULL," + "password TEXT NOT NULL," + "pc_id INTEGER DEFAULT NULL," + "FOREIGN KEY(pc_id) REFERENCES pcs(id) ON UPDATE CASCADE)"
+        db.execSQL(createUserTable)
 
         insertRaces(db)
         insertBackgrounds(db)
         insertClasses(db)
         insertLevel(db)
-
 
     }
 
@@ -170,7 +169,26 @@ class DatabaseHelper(context: Context) :
         return classes
     }
 
-    //TRASFONDOS
+    fun getClassIdByName(className: String): Int? {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            "classes",   // La tabla a consultar
+            arrayOf("class_id"),             // Las columnas a retornar
+            "class_name = ?",              // La columna para la cláusula WHERE
+            arrayOf(className),          // Los valores para la cláusula WHERE
+            null,          // No agrupar las filas
+            null,           // No filtrar por grupos de filas
+            null            // El orden de sort
+        )
+        var classId: Int? = null
+        if (cursor.moveToFirst()) {
+            classId = cursor.getInt(cursor.getColumnIndexOrThrow("class_id"))
+        }
+        cursor.close()
+        return classId
+    }
+
+//    TRASFONDOS
     fun getAllBackgrounds(): List<Background> {
         val db = this.readableDatabase
         val backgrounds = mutableListOf<Background>()
@@ -186,7 +204,7 @@ class DatabaseHelper(context: Context) :
                 bgName = cursor.getString(1),
                 competencies = cursor.getString(2),
                 tools = cursor.getString(3),
-                languages = cursor.getInt(4),
+                languages = cursor.getString(4),
                 items = cursor.getString(5),
                 traits = traits
             )
@@ -198,21 +216,24 @@ class DatabaseHelper(context: Context) :
         return backgrounds
     }
 
-    // NIVELES
-    fun getFeaturesByClassIdAndLevel(classId: Int, level: Int): List<Feature> {
+//     NIVELES
+    fun getFeaturesByClasseAndLevel(classe: Int, level: Int): List<Level> {
         val db = this.readableDatabase
-        val featuresList = mutableListOf<Feature>()
+        val featuresList = mutableListOf<Level>()
         val selectQuery =
             "SELECT * FROM class_levels WHERE class_id = ? AND level <= ? ORDER BY level ASC"
 
-        db.rawQuery(selectQuery, arrayOf(classId.toString(), level.toString())).use { cursor ->
+        db.rawQuery(selectQuery, arrayOf(classe.toString(), level.toString())).use { cursor ->
             while (cursor.moveToNext()) {
                 val featureName = cursor.getString(cursor.getColumnIndexOrThrow("feature_name"))
                 val description = cursor.getString(cursor.getColumnIndexOrThrow("description"))
-                featuresList.add(Feature(featureName, description))
+                val level = Level()
+                level.featureName = featureName
+                level.description = description
+                featuresList.add(level)
             }
         }
-
+        println("en database $featuresList")
         return featuresList
     }
 
@@ -230,9 +251,13 @@ class DatabaseHelper(context: Context) :
             put("hitPoints", personaje.hitPoints)
             val attributesJson = gson.toJson(personaje.attributes)
             put("attributes", attributesJson)
+            put("appearance", personaje.appearance)
+            val backgroundJson = gson.toJson(personaje.background)
+            put("background", backgroundJson)
             val competenciesJson = gson.toJson(personaje.competiences)
             put("competencies", competenciesJson)
-            put ("alignment", personaje.selectedAligment)
+            put("age", personaje.age)
+            put ("alignment", personaje.selectedAlignment)
             put("history", personaje.history)
             put("languages", personaje.languages)
             put("notes", personaje.notes)
@@ -246,17 +271,12 @@ class DatabaseHelper(context: Context) :
         val list = mutableListOf<Personaje>()
         val db = this.readableDatabase
         val cursor = db.query(
-            "personajes",
-            null,
-            "user_id=?",
-            arrayOf(userId.toString()),
-            null,
-            null,
-            null
+            "personajes", null, "user_id=?", arrayOf(userId.toString()), null, null, null
         )
 
         if (cursor.moveToFirst()) {
             do {
+                val pj_id = cursor.getInt(0)
                 val name = cursor.getString(2)
                 val imageUri = cursor.getString(3)
                 val className = cursor.getString(4)
@@ -274,26 +294,76 @@ class DatabaseHelper(context: Context) :
                 val gson = Gson()
                 val attributes = gson.fromJson(attributesJson, Attributes::class.java)
 
-                list.add(Personaje(
-                    name = name,
-                    imageUri = imageUri,
-                    characterClass = Classe(className = className),
-                    race = Race(name = race),
-                    numLevel = level,
-                    hitPoints = hitPoints,
-                    competiences = mutableListOf(competencies),
-                    attributes = attributes,
-                    selectedAligment = alignment,
-                    appearance = appearance,
-                    history = history,
-                    languages = languages,
-                    notes = notes
-                ))
-                println(list)
+                list.add(
+                    Personaje(
+                        pj_id = pj_id,
+                        name = name,
+                        imageUri = imageUri,
+                        characterClass = Classe(className = className),
+                        race = Race(name = race),
+                        numLevel = level,
+                        hitPoints = hitPoints,
+                        competiences = mutableListOf(competencies),
+//                    attributes = attributes,
+                        selectedAlignment = alignment,
+                        appearance = appearance,
+                        history = history,
+                        languages = languages,
+                        notes = notes
+                    )
+                )
             } while (cursor.moveToNext())
         }
         cursor.close()
         return list
+    }
+
+    fun deleteCharacter(characterId: Int): Boolean {
+        val db = writableDatabase
+        val selection = "personaje_id = ?"
+        val selectionArgs = arrayOf(characterId.toString())
+        val deletedRows = db.delete("personajes", selection, selectionArgs)
+        db.close()
+        return deletedRows > 0
+    }
+
+    fun getFeaturesByClassIdAndLevel(classId: Int, level: Int): List<Level> {
+        val levels = mutableListOf<Level>()
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM class_levels WHERE class_id = ? AND level = ?", arrayOf(classId.toString(), level.toString()))
+
+        if (cursor.moveToFirst()) {
+            do {
+                val featureName = cursor.getString(3)
+                val description = cursor.getString(4)
+                levels.add(Level(featureName = featureName, description = description))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return levels
+    }
+
+    fun updateCharacterLevelAndFeatures(personajeId: Int, newLevel: Int, classId: Int): MutableList<Level> {
+        val db = this.readableDatabase
+
+        val contentValues = ContentValues()
+        contentValues.put("level", newLevel)
+        db.update("personajes", contentValues, "personaje_id = ?", arrayOf(personajeId.toString()))
+
+
+
+        val levels = mutableListOf<Level>()
+        val cursor = db.rawQuery("SELECT * FROM class_levels WHERE class_id = ? AND level = ?", arrayOf(classId.toString(), newLevel.toString()))
+
+        if (cursor.moveToFirst()) {
+            do {
+                val featureName = cursor.getString(3)
+                val description = cursor.getString(4)
+                levels.add(Level(featureName = featureName, description = description))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return levels
     }
 }
 
@@ -458,15 +528,14 @@ private fun insertRaces(db: SQLiteDatabase) {
     races.forEach { race ->
         val attributesJson = gson.toJson(race.attributes)
         val featuresJson = gson.toJson(race.features)
-
         val values = ContentValues().apply {
             put("race_id", race.id)
             put("race_name", race.name)
-            put("characteristic_boost", attributesJson)
+            put("attributes", attributesJson)
             put("size", race.size)
             put("speed", race.speed)
             put("languages", race.languages)
-            put("attributes", featuresJson)
+            put("features", featuresJson)
         }
 
         db.insert("races", null, values)
@@ -480,7 +549,7 @@ private fun insertBackgrounds(db: SQLiteDatabase) {
             bgName = "Acolito",
             competencies = "Perspicacia, religión",
             tools = "",
-            languages = 2,
+            languages = 2.toString(),
             items = "Símbolo sagrado (un regalo de cuando fuiste ordenado sacerdote), devocionario o rueda de oraciones, 5 varas de incienso, vestiduras, muda de ropas comunes y una bolsa con 15 po",
             traits = Traits(
                 personalityTraits = mapOf(
@@ -520,7 +589,7 @@ private fun insertBackgrounds(db: SQLiteDatabase) {
             bgName = "Animador",
             competencies = "Acrobacias, Interpretación.",
             tools = "Útiles para disfrazarse, un tipo de instrumento musical. ",
-            languages = NULL,
+            languages = "",
             items = "Instrumento musical (a tu e lección), el favor de un admirador (carta de amor, bucle de cabello o bagatela), disfraz y una bolsa con 15 po. ",
             traits = Traits(
                 personalityTraits = mapOf(
@@ -560,7 +629,7 @@ private fun insertBackgrounds(db: SQLiteDatabase) {
             bgName = "Artesano Gremial",
             competencies = "Perspicacia, Persuasión",
             tools = "Un tipo de herramientas de artesano.",
-            languages = 1,
+            languages = 1.toString(),
             items = "Herramientas de artesano (un tipo a tu elección), carta de presentación de tu gremio, muda de ropas de viaje y una bolsa con 15 po. ",
             traits = Traits(
                 personalityTraits = mapOf(
@@ -600,7 +669,7 @@ private fun insertBackgrounds(db: SQLiteDatabase) {
             bgName = "Charlatán",
             competencies = "Engaño, Juego de Manos",
             tools = "Útiles para disfrazarse, útiles para falsificar ",
-            languages = NULL,
+            languages = "",
             items = "Muda de ropas de calidad, útiles para disfrazarse, herramientas para un timo de tu elección (diez botellas con tapones de corcho llenas de un líquido coloreado, un juego de dados trucados, una baraja de naipes marcada, un anillo de sellar de un duque imaginario) y una bolsa con 15 po.",
             traits = Traits(
                 personalityTraits = mapOf(
@@ -640,7 +709,7 @@ private fun insertBackgrounds(db: SQLiteDatabase) {
             bgName = "Criminal",
             competencies = "Engaño, Sigilo",
             tools = "Un tipo de juego a tu elección, herramientas de ladrón. ",
-            languages = NULL,
+            languages = "",
             items = "Palanqueta, muda de ropas corrientes de color oscuro y con capucha, una bolsa con 15 po.",
             traits = Traits(
                 personalityTraits = mapOf(
@@ -680,7 +749,7 @@ private fun insertBackgrounds(db: SQLiteDatabase) {
             bgName = "Ermitaño",
             competencies = "Medicina, Religión",
             tools = "Útiles de herborista",
-            languages = 1,
+            languages = 1.toString(),
             items = "Estuche para pergaminos lleno de notas de tus estudios u oraciones, manta para el invierno, muda de ropas comunes, útiles de herborista y 5 po.",
             traits = Traits(
                 personalityTraits = mapOf(
@@ -720,7 +789,7 @@ private fun insertBackgrounds(db: SQLiteDatabase) {
             bgName = "Erudito",
             competencies = "Conocimiento Arcano, Historia",
             tools = "",
-            languages = 2,
+            languages = 2.toString(),
             items = "Botella de tinta negra, pluma, cuchillo pequeño, carta de un colega muerto que te plantea una pregunta que aún no e res capaz de responder, muda de ropas comunes y una bolsa con 10 po.",
             traits = Traits(
                 personalityTraits = mapOf(
@@ -760,7 +829,7 @@ private fun insertBackgrounds(db: SQLiteDatabase) {
             bgName = "Héroe del pueblo",
             competencies = "Supervivencia, Trato con Animales",
             tools = "Un tipo de herramientas de artesano, vehículos terrestres",
-            languages = NULL,
+            languages = "",
             items = "Herramientas de artesano (un tipo a tu elección), pala, olla de h ierro, muda de ropas comunes y una bolsa con 10 po.",
             traits = Traits(
                 personalityTraits = mapOf(
@@ -800,7 +869,7 @@ private fun insertBackgrounds(db: SQLiteDatabase) {
             bgName = "Huerfano",
             competencies = "Juego de Manos, Sigilo",
             tools = "Herramientas de ladrón, útiles para disfrazarse",
-            languages = NULL,
+            languages = "",
             items = "Cuchillo pequeño, mapa de la ciudad en la que creciste, ratón (tu mascota), recuerdo de tus padres, muda de ropas comunes y una bolsa con 10 po. ",
             traits = Traits(
                 personalityTraits = mapOf(
@@ -840,7 +909,7 @@ private fun insertBackgrounds(db: SQLiteDatabase) {
             bgName = "Marinero",
             competencies = "Atletismo, Percepción",
             tools = "herramientas de navegante, vehículos acuáticos",
-            languages = NULL,
+            languages = "",
             items = "Cabilla (garrote), 50 pies de cuerda de seda, amuleto de la suerte como una pata de conejo o una piedra pequeña con un agujero en el centro (o puedes tirar en la tabla \"bagatelas\" del capítulo 5), muda de ropas comunes y una bolsa con 10 po. ",
             traits = Traits(
                 personalityTraits = mapOf(
@@ -880,7 +949,7 @@ private fun insertBackgrounds(db: SQLiteDatabase) {
             bgName = "Noble",
             competencies = "Historia, Persuasión",
             tools = "Un tipo de juego a tu elección",
-            languages = 1,
+            languages = 1.toString(),
             items = "Muda de ropas de calidad, anillo de sellar, documento que acredita el linaje y un monedero con 25 po.",
             traits = Traits(
                 personalityTraits = mapOf(
@@ -920,7 +989,7 @@ private fun insertBackgrounds(db: SQLiteDatabase) {
             bgName = "Salvaje",
             competencies = "Atletismo, Supervivencia",
             tools = "Un tipo de instrumento musical",
-            languages = 1,
+            languages = 1.toString(),
             items = "Bastón, trampa para cazar, trofeo de un animal al que has matado, muda de ropas de viaje y una bolsa con 10 po. ",
             traits = Traits(
                 personalityTraits = mapOf(
@@ -960,7 +1029,7 @@ private fun insertBackgrounds(db: SQLiteDatabase) {
             bgName = "Soldado",
             competencies = "Atletismo, Intimidación",
             tools = "Un tipo de juego a tu elección, vehículos terrestres",
-            languages = NULL,
+            languages = "",
             items = "Insignia de tu rango, trofeo tomado de un enemigo muerto (una daga , un filo roto o un pedazo de tela de un estandarte), juego de dados o baraja de cartas, muda de ropas comunes y una bolsa con 10 po.",
             traits = Traits(
                 personalityTraits = mapOf(
@@ -1119,7 +1188,7 @@ private fun insertClasses(db: SQLiteDatabase) {
             put("class_name", classObj.className)
             put("hit_die", classObj.hitDie)
             put("saving_throw_proficiencies", classObj.savingThrowProficiencies)
-            put("habilities_proficiencies", classObj.abilitiesProficiencies)
+            put("abilities_proficiencies", classObj.abilitiesProficiencies)
             put("armor_weapon_proficiencies", classObj.armorWeaponProficiencies)
         }
         db.insert("classes", null, values)

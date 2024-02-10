@@ -1,6 +1,7 @@
 package com.abriljavier.milistadeheroes.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,13 +16,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.abriljavier.milistadeheroes.DatabaseHelper
+import com.abriljavier.milistadeheroes.PersonalPageActivity
 import com.abriljavier.milistadeheroes.R
-import com.abriljavier.milistadeheroes.dataclasses.Feature
 import com.abriljavier.milistadeheroes.dataclasses.Personaje
 
 private lateinit var personaje: Personaje
 
-class CharacterCreationFragmentEleventh: Fragment() {
+class CharacterCreationFragmentEleventh : Fragment() {
 
     private lateinit var personaje: Personaje
 
@@ -70,12 +71,15 @@ class CharacterCreationFragmentEleventh: Fragment() {
             personaje.competiences.add(combinedProficiencies.toString())
 
 
-            println(personaje)
             val dbHelper = DatabaseHelper(requireContext())
             dbHelper.writableDatabase
             if (userId != null) {
                 dbHelper.addPersonaje(personaje, userId)
             }
+            val intent = Intent(context, PersonalPageActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            }
+            startActivity(intent)
         }
 
         return view

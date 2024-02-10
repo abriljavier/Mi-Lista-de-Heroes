@@ -48,13 +48,13 @@ class CharacterCreationFragmentSeventh : Fragment() {
                 parent: AdapterView<*>, view: View, position: Int, id: Long
             ) {
                 val selectedAlignment = alignmentList[position]
-                personaje.selectedAligment = selectedAlignment
+                personaje.selectedAlignment = selectedAlignment
 
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
                 val selectedLink = alignmentList[0]
-                personaje.selectedTrait = selectedLink
+//                personaje.selectedTrait = selectedLink
             }
         }
 
@@ -80,7 +80,6 @@ class CharacterCreationFragmentSeventh : Fragment() {
 
     private fun goToNextFragment() {
 
-        println(personaje)
 
         val nextFragment = CharacterCreationFragmentEighth()
 

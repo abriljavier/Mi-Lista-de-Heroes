@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutPageOne"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="548dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/infoImageView"
+                android:layout_width="247dp"
+                android:layout_height="183dp"
+                app:srcCompat="@drawable/barbarian" />
+
+            <TextView
+                android:id="@+id/charInfoStatsText"
+                android:layout_width="wrap_content"
+                android:layout_height="183dp"
+                android:layout_weight="1"
+                android:gravity="center|center_horizontal|center_vertical"
+                android:text="Estadísticas" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="410dp"
+        android:layout_height="497dp"
+        android:layout_marginTop="183dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="51dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/charNameText"
+            android:layout_width="291dp"
+            android:layout_height="63dp"
+            android:layout_marginStart="62dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="62dp"
+            android:layout_marginBottom="428dp"
+            android:gravity="center"
+            android:text="Nombre del personaje"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="389dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="94dp"
+            android:layout_marginEnd="13dp"
+            android:layout_marginBottom="384dp"
+            android:gravity="center"
+            android:text="TextView"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ListView
+            android:layout_width="411dp"
+            android:layout_height="228dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="165dp"
+            android:layout_marginEnd="3dp"
+            android:layout_marginBottom="156dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/levelUpBtn"
+            android:layout_width="102dp"
+            android:layout_height="76dp"
+            android:layout_marginStart="154dp"
+            android:layout_marginTop="377dp"
+            android:layout_marginEnd="154dp"
+            android:layout_marginBottom="44dp"
+            android:text="Subir de nivel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/deleteBtn"
+            android:layout_width="99dp"
+            android:layout_height="69dp"
+            android:layout_marginStart="34dp"
+            android:layout_marginTop="377dp"
+            android:text="Eliminar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/nextPageBtn"
+            android:layout_width="93dp"
+            android:layout_height="74dp"
+            android:layout_marginStart="282dp"
+            android:layout_marginTop="377dp"
+            android:layout_marginBottom="46dp"
+            android:text="Siguiente página"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

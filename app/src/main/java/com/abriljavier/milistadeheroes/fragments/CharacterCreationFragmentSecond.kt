@@ -16,7 +16,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.abriljavier.milistadeheroes.DatabaseHelper
 import com.abriljavier.milistadeheroes.R
-import com.abriljavier.milistadeheroes.dataclasses.Attributes
+import com.abriljavier.milistadeheroes.dataclasses.AttributesPJ
 import com.abriljavier.milistadeheroes.dataclasses.Classe
 import com.abriljavier.milistadeheroes.dataclasses.Personaje
 
@@ -114,7 +114,7 @@ class CharacterCreationFragmentSecond : Fragment() {
             val intValue = view.findViewById<EditText>(R.id.attributeValueINT)?.text.toString().toInt()
             val wisValue = view.findViewById<EditText>(R.id.attributeValueWIS)?.text.toString().toInt()
             val chaValue = view.findViewById<EditText>(R.id.attributeValueCHA)?.text.toString().toInt()
-            personaje.attributes = Attributes(
+            personaje.attributes = AttributesPJ(
                 STR = strValue,
                 DEX = dexValue,
                 CON = conValue,
@@ -123,8 +123,6 @@ class CharacterCreationFragmentSecond : Fragment() {
                 CHA = chaValue
             )
             personaje.characterClass = selectedClasse
-
-            println(personaje)
 
             val bundle = Bundle().apply {
                 putSerializable("personaje_key", personaje)

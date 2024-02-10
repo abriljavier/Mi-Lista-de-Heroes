@@ -41,8 +41,6 @@ class CharacterCreationFragmentEighth : Fragment() {
 
     private fun goToNextFragment() {
 
-        println(personaje)
-
         val nextFragment = CharacterCreationFragmentNinth()
 
         val bundle = Bundle().apply {

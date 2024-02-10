@@ -51,7 +51,6 @@ class ProfileActivity : AppCompatActivity() {
                 val dbHelper = DatabaseHelper(this)
                 val success = dbHelper.updateUserPassword(userId, newPassword)
                 dbHelper.close()
-                println(success)
                 if (success) {
                     Toast.makeText(this, "Contraseña modificada correctamente", Toast.LENGTH_SHORT)
                         .show()

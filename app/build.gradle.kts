@@ -47,4 +47,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0")
     implementation("com.google.code.gson:gson:2.8.8")
+    implementation("androidx.cardview:cardview:1.0.0")
+
 }

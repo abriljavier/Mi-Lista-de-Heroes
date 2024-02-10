@@ -10,33 +10,36 @@ import android.widget.Button
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import com.abriljavier.milistadeheroes.R
-import com.abriljavier.milistadeheroes.dataclasses.Ideal
 import com.abriljavier.milistadeheroes.dataclasses.Personaje
-import com.abriljavier.milistadeheroes.dataclasses.Traits
 
 private lateinit var personaje: Personaje
 
 class CharacterCreationFragmentSixth : Fragment() {
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_character_creation_sixth, container, false)
 
         personaje = (arguments?.getSerializable("personaje_key") as? Personaje)!!
 
 
-        val linksList = personaje.background?.traits?.links?.map { it.key.toString() + ": " + it.value }.orEmpty()
-        val flawsList = personaje.background?.traits?.flaws?.map { it.key.toString() + ": " + it.value }.orEmpty()
+        val linksList =
+            personaje.background?.traits?.links?.map { it.key.toString() + ": " + it.value }
+                .orEmpty()
+        val flawsList =
+            personaje.background?.traits?.flaws?.map { it.key.toString() + ": " + it.value }
+                .orEmpty()
 
         val linkSpinner = view.findViewById<Spinner>(R.id.linkSpinner)
-        val linkAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, linksList)
+        val linkAdapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, linksList)
         linkAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         linkSpinner.adapter = linkAdapter
 
         val flawsSpinner = view.findViewById<Spinner>(R.id.flawSpinner)
-        val flawsAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, flawsList)
+        val flawsAdapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, flawsList)
         flawsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         flawsSpinner.adapter = flawsAdapter
 
@@ -45,13 +48,17 @@ class CharacterCreationFragmentSixth : Fragment() {
                 parent: AdapterView<*>, view: View, position: Int, id: Long
             ) {
                 val selectedLink = linksList[position]
-                personaje.selectedBonds = selectedLink
+                var selectedLinkSplit = selectedLink.split(":")
+                val mapOfSelectedLinks = mapOf(selectedLinkSplit[0].toInt() to selectedLinkSplit[1])
+                personaje.background?.traits?.links = mapOfSelectedLinks
 
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
                 val selectedLink = linksList[0]
-                personaje.selectedTrait = selectedLink
+                var selectedLinkSplit = selectedLink.split(":")
+                val mapOfSelectedLinks = mapOf(selectedLinkSplit[0].toInt() to selectedLinkSplit[1])
+                personaje.background?.traits?.links = mapOfSelectedLinks
             }
         }
 
@@ -60,11 +67,18 @@ class CharacterCreationFragmentSixth : Fragment() {
                 parent: AdapterView<*>, view: View, position: Int, id: Long
             ) {
                 val selectedFlaws = flawsList[position]
-                personaje.selectedFlaws = selectedFlaws
+                var selectedFlawsSplit = selectedFlaws.split(":")
+                val mapOfSelectedFlaws =
+                    mapOf(selectedFlawsSplit[0].toInt() to selectedFlawsSplit[1])
+                personaje.background?.traits?.flaws = mapOfSelectedFlaws
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                personaje.selectedFlaws = flawsList[0]
+                val selectedFlaws = flawsList[0]
+                var selectedFlawsSplit = selectedFlaws.split(":")
+                val mapOfSelectedFlaws =
+                    mapOf(selectedFlawsSplit[0].toInt() to selectedFlawsSplit[1])
+                personaje.background?.traits?.flaws = mapOfSelectedFlaws
             }
         }
 
@@ -75,9 +89,9 @@ class CharacterCreationFragmentSixth : Fragment() {
 
         return view
     }
+
     private fun goToNextFragment() {
 
-        println(personaje)
 
         val nextFragment = CharacterCreationFragmentSeventh()
 
@@ -87,8 +101,6 @@ class CharacterCreationFragmentSixth : Fragment() {
         nextFragment.arguments = bundle
 
         activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.frameLayout, nextFragment)
-            ?.addToBackStack(null)
-            ?.commit()
+            ?.replace(R.id.frameLayout, nextFragment)?.addToBackStack(null)?.commit()
     }
 }

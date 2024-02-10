@@ -41,7 +41,6 @@ class CharacterCreationFragmentNinth : Fragment() {
 
     private fun goToNextFragment() {
 
-        println(personaje)
 
         val nextFragment = CharacterCreationFragmentTenth()
 

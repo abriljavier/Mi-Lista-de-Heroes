@@ -45,13 +45,15 @@ class CharacterCreationFragmentFifth : Fragment() {
                 parent: AdapterView<*>, view: View, position: Int, id: Long
             ) {
                 val selectedTraitValue = personalityTraitsList[position]
-                personaje.selectedTrait = selectedTraitValue
-
+                var selectedTrait = selectedTraitValue.split(":")
+                val mapOfSelectedTraits = mapOf(selectedTrait[0].toInt() to selectedTrait[1])
+                personaje.background?.traits?.personalityTraits = mapOfSelectedTraits
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                val selectedTraitValue = personalityTraitsList[0]
-                personaje.selectedTrait = selectedTraitValue
+                val selectedTrait = personalityTraitsList[0]
+                val mapOfSelectedTraits = mapOf(selectedTrait[0].toInt() to selectedTrait[1].toString())
+                personaje.background?.traits?.personalityTraits = mapOfSelectedTraits
             }
         }
 
@@ -60,13 +62,16 @@ class CharacterCreationFragmentFifth : Fragment() {
                 parent: AdapterView<*>, view: View, position: Int, id: Long
             ) {
                 val selectedIdealValue = idealsList[position]
-                println(selectedIdealValue)
-                personaje.selectedIdeal = selectedIdealValue
+                var selectedIdeal = selectedIdealValue.split(":")
+                val mapOfSelectedIdeals = mapOf(selectedIdeal[0].toInt() to selectedIdeal[1])
+                personaje.background?.traits?.ideals = mapOfSelectedIdeals
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                personaje.selectedIdeal = idealsList[0]
-            }
+                val selectedIdealValue = idealsList[0]
+                var selectedIdeal = selectedIdealValue.split(":")
+                val mapOfSelectedIdeals = mapOf(selectedIdeal[0].toInt() to selectedIdeal[1])
+                personaje.background?.traits?.ideals = mapOfSelectedIdeals            }
         }
 
 
@@ -78,7 +83,6 @@ class CharacterCreationFragmentFifth : Fragment() {
     }
     private fun goToNextFragment() {
 
-        println(personaje)
 
         val nextFragment = CharacterCreationFragmentSixth()
 

@@ -23,10 +23,10 @@ data class Flaw(
 ) : Serializable
 
 data class Traits(
-    val personalityTraits: Map<Int, String>? = null,
-    val ideals: Map<Int, String>? = null,
-    val links: Map<Int, String>? = null,
-    val flaws: Map<Int, String>? = null
+    var personalityTraits: Map<Int, String>? = null,
+    var ideals: Map<Int, String>? = null,
+    var links: Map<Int, String>? = null,
+    var flaws: Map<Int, String>? = null
 ) : Serializable
 
 data class Background(
@@ -34,7 +34,7 @@ data class Background(
     val bgName: String? = null,
     val competencies: String? = null,
     val tools: String? = null,
-    val languages: Int? = null,
+    val languages: String? = null,
     val items: String? = null,
-    val traits: Traits? = null
+    var traits: Traits? = null
 ) : Serializable
