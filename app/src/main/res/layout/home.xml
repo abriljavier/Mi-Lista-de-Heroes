@@ -84,7 +84,7 @@
             android:ems="10"
             android:fontFamily="sans-serif"
             android:hint="Contraseña"
-            android:inputType="text" />
+            android:inputType="textPassword" />
     </LinearLayout>
 
     <Button

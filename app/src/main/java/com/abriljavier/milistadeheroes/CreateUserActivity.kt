@@ -26,12 +26,7 @@ class CreateUserActivity: AppCompatActivity() {
         val inputUsername = findViewById<EditText>(R.id.inputUsername)
         val inputPassword = findViewById<EditText>(R.id.inputPassword)
         val createAccountBtn = findViewById<Button>(R.id.createAccountBtn)
-        val goBackBtn = findViewById<Button>(R.id.goBackBtn)
         val dbHelper = DatabaseHelper(this)
-
-        goBackBtn.setOnClickListener {
-            finish()
-        }
 
         createAccountBtn.setOnClickListener{
             var usernametext = inputUsername.text.toString()

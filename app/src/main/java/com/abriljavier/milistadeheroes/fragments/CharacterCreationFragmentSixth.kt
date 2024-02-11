@@ -8,9 +8,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.abriljavier.milistadeheroes.R
 import com.abriljavier.milistadeheroes.dataclasses.Personaje
+import org.w3c.dom.Text
 
 private lateinit var personaje: Personaje
 
@@ -23,6 +25,8 @@ class CharacterCreationFragmentSixth : Fragment() {
 
         personaje = (arguments?.getSerializable("personaje_key") as? Personaje)!!
 
+        val bondTextView = view.findViewById<TextView>(R.id.selectedBondText)
+        val flawTextView = view.findViewById<TextView>(R.id.selectedFlawText)
 
         val linksList =
             personaje.background?.traits?.links?.map { it.key.toString() + ": " + it.value }
@@ -51,7 +55,7 @@ class CharacterCreationFragmentSixth : Fragment() {
                 var selectedLinkSplit = selectedLink.split(":")
                 val mapOfSelectedLinks = mapOf(selectedLinkSplit[0].toInt() to selectedLinkSplit[1])
                 personaje.background?.traits?.links = mapOfSelectedLinks
-
+                bondTextView.text = selectedLink
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -59,6 +63,8 @@ class CharacterCreationFragmentSixth : Fragment() {
                 var selectedLinkSplit = selectedLink.split(":")
                 val mapOfSelectedLinks = mapOf(selectedLinkSplit[0].toInt() to selectedLinkSplit[1])
                 personaje.background?.traits?.links = mapOfSelectedLinks
+                bondTextView.text = selectedLink
+
             }
         }
 
@@ -71,6 +77,8 @@ class CharacterCreationFragmentSixth : Fragment() {
                 val mapOfSelectedFlaws =
                     mapOf(selectedFlawsSplit[0].toInt() to selectedFlawsSplit[1])
                 personaje.background?.traits?.flaws = mapOfSelectedFlaws
+                flawTextView.text = selectedFlaws
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -79,6 +87,8 @@ class CharacterCreationFragmentSixth : Fragment() {
                 val mapOfSelectedFlaws =
                     mapOf(selectedFlawsSplit[0].toInt() to selectedFlawsSplit[1])
                 personaje.background?.traits?.flaws = mapOfSelectedFlaws
+                flawTextView.text = selectedFlaws
+
             }
         }
 

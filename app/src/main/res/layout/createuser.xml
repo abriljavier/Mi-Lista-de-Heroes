@@ -68,7 +68,7 @@
             android:ems="10"
             android:fontFamily="sans-serif"
             android:hint="Contraseña"
-            android:inputType="text" />
+            android:inputType="textPassword" />
     </LinearLayout>
 
     <Button
@@ -82,23 +82,6 @@
         android:backgroundTint="@color/details"
         android:fontFamily="sans-serif"
         android:text="Crear cuenta"
-        android:textColorLink="@color/details"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/goBackBtn"
-        android:layout_width="184dp"
-        android:layout_height="88dp"
-        android:layout_marginStart="113dp"
-        android:layout_marginTop="547dp"
-        android:layout_marginEnd="114dp"
-        android:layout_marginBottom="96dp"
-        android:backgroundTint="@color/details"
-        android:fontFamily="sans-serif"
-        android:text="Volver atrás"
         android:textColorLink="@color/details"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

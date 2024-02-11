@@ -17,7 +17,7 @@ data class Features(
 
 
 data class Race(
-    val id: Int? = null,
+    var id: Int? = null,
     val name: String? = null,
     val attributes: Attributes? = null,
     val size: String? = null,

@@ -27,7 +27,6 @@ class CharacterCreationFragmentFourth : Fragment() {
 
         personaje = (arguments?.getSerializable("personaje_key") as? Personaje)!!
         var selectedBg: Background? = null
-        var bgdesc = view.findViewById<TextView>(R.id.bgdesc)
 
         val dbHelper = DatabaseHelper(requireContext())
         dbHelper.writableDatabase
@@ -46,13 +45,11 @@ class CharacterCreationFragmentFourth : Fragment() {
                 parent: AdapterView<*>, view: View, position: Int, id: Long
             ) {
                 selectedBg = backgrounds[position]
-                bgdesc.text = backgrounds[position].bgName
                 personaje.background = selectedBg
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
                 selectedBg = backgrounds[0]
-                bgdesc.text = backgrounds[0].bgName
                 personaje.background = selectedBg
 
             }

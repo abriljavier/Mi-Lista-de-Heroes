@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import com.abriljavier.milistadeheroes.dataclasses.Attributes
+import com.abriljavier.milistadeheroes.dataclasses.AttributesPJ
 import com.abriljavier.milistadeheroes.dataclasses.Background
 import com.abriljavier.milistadeheroes.dataclasses.Classe
 //import com.abriljavier.milistadeheroes.dataclasses.Feature
@@ -136,6 +137,56 @@ class DatabaseHelper(context: Context) :
         return races
     }
 
+    fun getRacesByName(raceName: String): Race? {
+        val db = this.readableDatabase
+        val gson = Gson()
+        var race: Race? = null
+        val cursor = db.rawQuery("SELECT * FROM races WHERE race_name = ?", arrayOf(raceName))
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow("race_id"))
+
+            val name = cursor.getString(cursor.getColumnIndexOrThrow("race_name"))
+            val attributesJson = cursor.getString(cursor.getColumnIndexOrThrow("attributes"))
+            val size = cursor.getString(cursor.getColumnIndexOrThrow("size"))
+            val speed = cursor.getInt(cursor.getColumnIndexOrThrow("speed"))
+            val languages = cursor.getString(cursor.getColumnIndexOrThrow("languages"))
+            val featuresJson = cursor.getString(cursor.getColumnIndexOrThrow("features"))
+
+            val attributes = gson.fromJson(attributesJson, Attributes::class.java)
+            val features = if (featuresJson != null) gson.fromJson(featuresJson, Features::class.java) else null
+
+            race = Race(id, name, attributes, size, speed, languages, features)
+        }
+
+        cursor.close()
+        return race
+    }
+
+    fun getRaceById(raceId: Int): Race? {
+        val db = this.readableDatabase
+        val gson = Gson()
+        val cursor = db.query("races", null, "race_id = ?", arrayOf(raceId.toString()), null, null, null)
+
+        var race: Race? = null
+        if (cursor.moveToFirst()) {
+            val raceIdVal = cursor.getInt(0)
+            val raceName = cursor.getString(1)
+            val attributesJson = cursor.getString(2)
+            val size = cursor.getString(3)
+            val speed = cursor.getInt(4)
+            val languages = cursor.getString(5)
+            val featuresJson = cursor.getString(6)
+
+            val attributes: Attributes? = gson.fromJson(attributesJson, Attributes::class.java)
+            val features: Features? = gson.fromJson(featuresJson, Features::class.java)
+
+            race = Race(id = raceIdVal, name = raceName, attributes = attributes, size = size, speed = speed, languages = languages, features = features)
+        }
+        cursor.close()
+        return race
+    }
+
     //CLASES
     fun getAllClasses(): List<Classe> {
         val classes = mutableListOf<Classe>()
@@ -172,13 +223,13 @@ class DatabaseHelper(context: Context) :
     fun getClassIdByName(className: String): Int? {
         val db = this.readableDatabase
         val cursor = db.query(
-            "classes",   // La tabla a consultar
-            arrayOf("class_id"),             // Las columnas a retornar
-            "class_name = ?",              // La columna para la cláusula WHERE
-            arrayOf(className),          // Los valores para la cláusula WHERE
-            null,          // No agrupar las filas
-            null,           // No filtrar por grupos de filas
-            null            // El orden de sort
+            "classes",
+            arrayOf("class_id"),
+            "class_name = ?",
+            arrayOf(className),
+            null,
+            null,
+            null
         )
         var classId: Int? = null
         if (cursor.moveToFirst()) {
@@ -186,6 +237,52 @@ class DatabaseHelper(context: Context) :
         }
         cursor.close()
         return classId
+    }
+
+    fun getClassByName(className: String): Classe? {
+        val db = this.readableDatabase // Asume que 'this' es una instancia de SQLiteOpenHelper
+        var classe: Classe? = null // Inicializa classe como null para permitir retorno de un valor nulo si no se encuentra la clase
+
+        val cursor = db.rawQuery("SELECT * FROM classes WHERE class_name = ?", arrayOf(className))
+
+        if (cursor.moveToFirst()) { // Usa if en lugar de while si esperas un único resultado
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow("class_id"))
+            val name = cursor.getString(cursor.getColumnIndexOrThrow("class_name"))
+            val hitDie = cursor.getString(cursor.getColumnIndexOrThrow("hit_die"))
+            val savingThrowProficiencies = cursor.getString(cursor.getColumnIndexOrThrow("saving_throw_proficiencies"))
+            val abilitiesProficiencies = cursor.getString(cursor.getColumnIndexOrThrow("abilities_proficiencies"))
+            val armorWeaponProficiencies = cursor.getString(cursor.getColumnIndexOrThrow("armor_weapon_proficiencies"))
+
+            classe = Classe(
+                classId = id,
+                className = name,
+                hitDie = hitDie,
+                savingThrowProficiencies = savingThrowProficiencies,
+                abilitiesProficiencies = abilitiesProficiencies,
+                armorWeaponProficiencies = armorWeaponProficiencies
+            )
+        }
+
+        cursor.close()
+        return classe // Retorna classe, que puede ser null si no se encontró ninguna clase
+    }
+
+    fun getClassById(classId: Int): Classe? {
+        val db = this.readableDatabase
+        val cursor = db.query("classes", null, "class_id = ?", arrayOf(classId.toString()), null, null, null)
+
+        var classe: Classe? = null
+        if (cursor.moveToFirst()) {
+            val classId = cursor.getInt(0)
+            val className = cursor.getString(1)
+            val hitDie = cursor.getString(2)
+            val savingThrowProficiencies = cursor.getString(3)
+            val abilitiesProficiencies = cursor.getString(3)
+            val armorWeaponProficiencies = cursor.getString(3)
+            classe = Classe(classId = classId, className = className, hitDie = hitDie, savingThrowProficiencies = savingThrowProficiencies, abilitiesProficiencies=abilitiesProficiencies, armorWeaponProficiencies = armorWeaponProficiencies)
+        }
+        cursor.close()
+        return classe
     }
 
 //    TRASFONDOS
@@ -233,7 +330,7 @@ class DatabaseHelper(context: Context) :
                 featuresList.add(level)
             }
         }
-        println("en database $featuresList")
+        ("en database $featuresList")
         return featuresList
     }
 
@@ -267,20 +364,19 @@ class DatabaseHelper(context: Context) :
         db.close()
     }
 
-    fun getPersonajesByUserId(userId: Int): List<Personaje> {
+    fun getPersonajesByUserId(userId: Int): MutableList<Personaje> {
         val list = mutableListOf<Personaje>()
         val db = this.readableDatabase
-        val cursor = db.query(
-            "personajes", null, "user_id=?", arrayOf(userId.toString()), null, null, null
-        )
+        val cursor = db.rawQuery("SELECT * FROM personajes WHERE user_id = ?", arrayOf(userId.toString()))
 
         if (cursor.moveToFirst()) {
             do {
                 val pj_id = cursor.getInt(0)
+                val user_id = cursor.getInt(1)
                 val name = cursor.getString(2)
                 val imageUri = cursor.getString(3)
                 val className = cursor.getString(4)
-                val race = cursor.getString(5)
+                val raceName = cursor.getString(5)
                 val level = cursor.getInt(6)
                 val hitPoints = cursor.getInt(7)
                 val competencies = cursor.getString(8)
@@ -290,26 +386,36 @@ class DatabaseHelper(context: Context) :
                 val history = cursor.getString(12)
                 val languages = cursor.getString(13)
                 val notes = cursor.getString(14)
+                val backgroundText = cursor.getString(15)
+                val age = cursor.getString(16)
 
                 val gson = Gson()
-                val attributes = gson.fromJson(attributesJson, Attributes::class.java)
+                val attributes = gson.fromJson(attributesJson, AttributesPJ::class.java)
+                println(attributes.STR)
+                val competenciesList = gson.fromJson(competencies, Array<String>::class.java).toList()
+                val background = gson.fromJson(backgroundText, Background::class.java)
+
+                val characterClass = getClassByName(className)
+                val race = getRacesByName(raceName)
 
                 list.add(
                     Personaje(
                         pj_id = pj_id,
                         name = name,
                         imageUri = imageUri,
-                        characterClass = Classe(className = className),
-                        race = Race(name = race),
+                        characterClass = characterClass,
+                        race = race,
                         numLevel = level,
                         hitPoints = hitPoints,
-                        competiences = mutableListOf(competencies),
-//                    attributes = attributes,
+                        competiences = competenciesList.toMutableList(),
+                        attributes = attributes,
                         selectedAlignment = alignment,
                         appearance = appearance,
                         history = history,
                         languages = languages,
-                        notes = notes
+                        notes = notes,
+                        background = background,
+                        age = age
                     )
                 )
             } while (cursor.moveToNext())
@@ -349,8 +455,6 @@ class DatabaseHelper(context: Context) :
         val contentValues = ContentValues()
         contentValues.put("level", newLevel)
         db.update("personajes", contentValues, "personaje_id = ?", arrayOf(personajeId.toString()))
-
-
 
         val levels = mutableListOf<Level>()
         val cursor = db.rawQuery("SELECT * FROM class_levels WHERE class_id = ? AND level = ?", arrayOf(classId.toString(), newLevel.toString()))

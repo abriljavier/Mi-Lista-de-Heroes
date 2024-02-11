@@ -8,6 +8,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.abriljavier.milistadeheroes.R
 import com.abriljavier.milistadeheroes.dataclasses.Ideal
@@ -29,6 +30,9 @@ class CharacterCreationFragmentFifth : Fragment() {
 
         val personalityTraitsList = personaje.background?.traits?.personalityTraits?.map { it.key.toString() + ": " + it.value }.orEmpty()
         val idealsList = personaje.background?.traits?.ideals?.map { it.key.toString() + ": " + it.value }.orEmpty()
+        val traitTextView = view.findViewById<TextView>(R.id.selectedTraitText)
+        val idealTextView = view.findViewById<TextView>(R.id.selectedIdealText)
+
 
         val traitSpinner = view.findViewById<Spinner>(R.id.traitSpinner)
         val traitAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, personalityTraitsList)
@@ -48,12 +52,15 @@ class CharacterCreationFragmentFifth : Fragment() {
                 var selectedTrait = selectedTraitValue.split(":")
                 val mapOfSelectedTraits = mapOf(selectedTrait[0].toInt() to selectedTrait[1])
                 personaje.background?.traits?.personalityTraits = mapOfSelectedTraits
+                traitTextView.text = selectedTraitValue
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
                 val selectedTrait = personalityTraitsList[0]
                 val mapOfSelectedTraits = mapOf(selectedTrait[0].toInt() to selectedTrait[1].toString())
                 personaje.background?.traits?.personalityTraits = mapOfSelectedTraits
+                traitTextView.text = selectedTrait
+
             }
         }
 
@@ -65,13 +72,18 @@ class CharacterCreationFragmentFifth : Fragment() {
                 var selectedIdeal = selectedIdealValue.split(":")
                 val mapOfSelectedIdeals = mapOf(selectedIdeal[0].toInt() to selectedIdeal[1])
                 personaje.background?.traits?.ideals = mapOfSelectedIdeals
+                idealTextView.text = selectedIdealValue
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
                 val selectedIdealValue = idealsList[0]
                 var selectedIdeal = selectedIdealValue.split(":")
                 val mapOfSelectedIdeals = mapOf(selectedIdeal[0].toInt() to selectedIdeal[1])
-                personaje.background?.traits?.ideals = mapOfSelectedIdeals            }
+                personaje.background?.traits?.ideals = mapOfSelectedIdeals
+                idealTextView.text = selectedIdealValue
+
+            }
         }
 
 

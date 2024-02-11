@@ -1,5 +1,5 @@
-import android.app.AlertDialog
-import android.content.Context
+package com.abriljavier.milistadeheroes.adapters
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +11,7 @@ import com.abriljavier.milistadeheroes.dataclasses.Personaje
 import android.net.Uri
 
 
-class CharacterAdapter(private var characters: List<Personaje>, private val onItemClick: (Personaje) -> Unit) : RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder>() {
+class CharacterAdapter(var characters: MutableList<Personaje>, private val onItemClick: (Personaje) -> Unit) : RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder>() {
 
     class CharacterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val characterName: TextView = view.findViewById(R.id.charName)
@@ -39,7 +39,7 @@ class CharacterAdapter(private var characters: List<Personaje>, private val onIt
     }
 
     fun updateData(newCharacters: List<Personaje>) {
-        characters = newCharacters
+        characters = newCharacters.toMutableList()
         notifyDataSetChanged()
     }
 

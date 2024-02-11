@@ -66,11 +66,9 @@ class CharacterCreationFragmentEleventh : Fragment() {
 
 
         view.findViewById<Button>(R.id.finishBtn).setOnClickListener {
-
             personaje.hitPoints = maxHp
-            personaje.competiences.add(combinedProficiencies.toString())
-
-
+            personaje.competiences.clear()
+            personaje.competiences.addAll(combinedProficiencies)
             val dbHelper = DatabaseHelper(requireContext())
             dbHelper.writableDatabase
             if (userId != null) {

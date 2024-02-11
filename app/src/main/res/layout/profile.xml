@@ -46,7 +46,7 @@
         android:ems="10"
         android:fontFamily="sans-serif"
         android:hint="Placeholder changing on init"
-        android:inputType="text"
+        android:inputType="textPassword"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

@@ -6,16 +6,44 @@
     android:layout_height="665dp">
 
     <TextView
+        android:id="@+id/selectedBondText"
+        android:layout_width="374dp"
+        android:layout_height="124dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="152dp"
+        android:layout_marginEnd="15dp"
+        android:text="TextView"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/selectedFlawText"
+        android:layout_width="374dp"
+        android:layout_height="124dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="404dp"
+        android:layout_marginEnd="15dp"
+        android:text="TextView"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/textView4"
         android:layout_width="378dp"
         android:layout_height="65dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="101dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="499dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="584dp"
         android:fontFamily="sans-serif"
         android:text="Selecciona un vínculo"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,23 +53,10 @@
         android:id="@+id/linkSpinner"
         android:layout_width="378dp"
         android:layout_height="65dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="166dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="434dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Spinner
-        android:id="@+id/flawSpinner"
-        android:layout_width="378dp"
-        android:layout_height="65dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="410dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="190dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="81dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="519dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,17 +66,23 @@
         android:id="@+id/textView10"
         android:layout_width="378dp"
         android:layout_height="65dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="345dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="255dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="276dp"
         android:fontFamily="sans-serif"
         android:text="Selecciona un defecto"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/flawSpinner"
+        android:layout_width="378dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="259dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/forwardBtn88"

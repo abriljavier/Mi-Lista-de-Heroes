@@ -1,6 +1,10 @@
 package com.abriljavier.milistadeheroes.fragments
 
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,10 +45,30 @@ class CharacterCreationFragmentTenth: Fragment() {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
-                text = "${feature.featureName}: ${feature.description}"
+                val featureText = "${feature.featureName}: ${feature.description}"
+
+                val spannableString = SpannableString(featureText)
+                val colonIndex = featureText.indexOf(':')
+                spannableString.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    0,
+                    colonIndex,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                )
+                text = spannableString
             }
 
+            val density = resources.displayMetrics.density
+            val dpValue = 8
+            val paddingPixel = (dpValue * density).toInt()
+
             featuresContainer.addView(featureTextView)
+            featuresContainer.setPadding(
+                featuresContainer.paddingLeft,
+                featuresContainer.paddingTop,
+                featuresContainer.paddingRight,
+                paddingPixel
+            )
         }
 
         view.findViewById<Button>(R.id.forwardBtn445).setOnClickListener {
