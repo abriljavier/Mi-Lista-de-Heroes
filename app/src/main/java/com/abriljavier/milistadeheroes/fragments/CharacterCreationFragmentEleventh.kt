@@ -41,13 +41,14 @@ class CharacterCreationFragmentEleventh : Fragment() {
         val pgInput = view.findViewById<EditText>(R.id.pgInput)
         val rollTheDiceButton = view.findViewById<Button>(R.id.rollTheDice)
         val competenciasLayout = view.findViewById<LinearLayout>(R.id.competenciasLayout)
+        val rollTheDice = view.findViewById<Button>(R.id.rollTheDice)
 
         val hitDie = personaje.characterClass?.hitDie ?: "1d6"
         val maxHp = hitDie.split("d").last().toInt()
 
         pgInput.setText(maxHp.toString())
         pgInput.isEnabled = false
-        rollTheDiceButton.isEnabled = false
+        rollTheDiceButton.isEnabled = true
 
         val abilitiesProficiencies =
             personaje.characterClass?.abilitiesProficiencies?.split(", ")?.toSet() ?: emptySet()
@@ -64,6 +65,9 @@ class CharacterCreationFragmentEleventh : Fragment() {
             competenciasLayout.addView(textView)
         }
 
+        rollTheDice.setOnClickListener {
+            Toast.makeText(requireContext(), "En el nivel 1 no puedes modificar su salud!", Toast.LENGTH_SHORT).show()
+        }
 
         view.findViewById<Button>(R.id.finishBtn).setOnClickListener {
             personaje.hitPoints = maxHp

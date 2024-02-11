@@ -55,7 +55,6 @@ class CharacterCreationFragmentSeventh : Fragment() {
 
             override fun onNothingSelected(parent: AdapterView<*>) {
                 val selectedLink = alignmentList[0]
-//                personaje.selectedTrait = selectedLink
             }
         }
 
@@ -88,11 +87,6 @@ class CharacterCreationFragmentSeventh : Fragment() {
             putSerializable("personaje_key", personaje)
         }
         nextFragment.arguments = bundle
-
-        MediaPlayer.create(context, R.raw.pasar_pagina)?.apply {
-            start()
-            setOnCompletionListener { mp -> mp.release() }
-        }
 
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.frameLayout, nextFragment)?.addToBackStack(null)?.commit()

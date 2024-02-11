@@ -92,11 +92,6 @@ class CharacterCreationFragmentTenth: Fragment() {
         }
         nextFragment.arguments = bundle
 
-        MediaPlayer.create(context, R.raw.pasar_pagina)?.apply {
-            start()
-            setOnCompletionListener { mp -> mp.release() }
-        }
-
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.frameLayout, nextFragment)?.addToBackStack(null)?.commit()
     }

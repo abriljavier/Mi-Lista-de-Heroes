@@ -123,7 +123,7 @@ private fun showAlertDialog(title: String, message: String, context: Context) {
 private fun showSeeMoreDialog(context: Context) {
     val dialogBuilder = AlertDialog.Builder(context)
     dialogBuilder.setTitle("Sobre la app")
-    dialogBuilder.setMessage("Aplicación creada por Javier Abril.\n\nEsta aplicación no está monetizada y no guardo los derechos de los datos aqui representados, todos los derechos pertenecen a Wizard of the Coast.\n\nhttps://github.com/abriljavier")
+    dialogBuilder.setMessage("Aplicación creada por Javier Abril para la asignatura de DIW, 2024.\n\nEsta aplicación no está monetizada y no guardo los derechos de los datos aqui representados\n\nhttps://github.com/abriljavier")
     dialogBuilder.setPositiveButton("Aceptar") { dialog, which ->
         dialog.dismiss()
     }

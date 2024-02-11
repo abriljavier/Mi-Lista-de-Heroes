@@ -129,10 +129,6 @@ class CharacterCreationFragmentSecond : Fragment() {
             val nextFragment = CharacterCreationFragmentThird().apply {
                 arguments = bundle
             }
-            MediaPlayer.create(context, R.raw.pasar_pagina)?.apply {
-                start()
-                setOnCompletionListener { mp -> mp.release() }
-            }
 
             parentFragmentManager.beginTransaction().replace(R.id.frameLayout, nextFragment)
                 .addToBackStack(null)

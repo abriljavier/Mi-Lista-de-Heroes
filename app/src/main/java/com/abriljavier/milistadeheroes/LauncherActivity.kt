@@ -20,18 +20,16 @@ class LauncherActivity : AppCompatActivity() {
         val rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate)
         loadingCircle.startAnimation(rotateAnimation)
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.third_jingle)
-        mediaPlayer?.start()
+        mediaPlayer = MediaPlayer.create(this, R.raw.main).apply {
+            isLooping = true
+            setVolume(1.0f, 1.0f)
+            start()
+        }
 
         Handler().postDelayed({
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
-        }, 3000)
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        mediaPlayer?.release() // Libera los recursos del MediaPlayer
-        mediaPlayer = null // Ayuda a evitar fugas de memoria
+        }, 5000)
     }
 }

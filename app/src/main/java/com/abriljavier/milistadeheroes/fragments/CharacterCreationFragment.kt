@@ -76,11 +76,6 @@ class CharacterCreationFragment : Fragment() {
                 arguments = bundle
             }
 
-            MediaPlayer.create(context, R.raw.pasar_pagina)?.apply {
-                start()
-                setOnCompletionListener { mp -> mp.release() }
-            }
-
             parentFragmentManager.beginTransaction().replace(R.id.frameLayout, nextFragment)
                 .addToBackStack(null)
                 .commit()

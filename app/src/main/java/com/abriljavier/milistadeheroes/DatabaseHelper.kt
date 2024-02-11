@@ -1461,7 +1461,7 @@ private fun insertLevel(db: SQLiteDatabase) {
             classId = 4,
             level = 2,
             featureName = "rasgo de Dominio Divino",
-            description = ""
+            description = "No hay mejoras para esta clase y este nivel"
         ), Level(
             levelId = 30,
             classId = 5,
