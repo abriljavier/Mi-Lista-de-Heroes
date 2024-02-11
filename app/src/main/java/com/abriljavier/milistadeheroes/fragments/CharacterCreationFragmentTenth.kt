@@ -1,6 +1,7 @@
 package com.abriljavier.milistadeheroes.fragments
 
 import android.graphics.Typeface
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -13,6 +14,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -39,12 +41,18 @@ class CharacterCreationFragmentTenth: Fragment() {
 
         val characterFeatures = dbHelper.getFeaturesByClasseAndLevel(classId, level)
 
+        val scrollView = ScrollView(requireContext())
+        val linearLayout = LinearLayout(requireContext())
+        linearLayout.orientation = LinearLayout.VERTICAL
+
         for (feature in characterFeatures) {
             val featureTextView = TextView(context).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
-                )
+                ).apply {
+                    setMargins(20, 0, 20, 20)
+                }
                 val featureText = "${feature.featureName}: ${feature.description}"
 
                 val spannableString = SpannableString(featureText)
@@ -56,26 +64,21 @@ class CharacterCreationFragmentTenth: Fragment() {
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE
                 )
                 text = spannableString
+                setTextSize(20f) // Tamaño del texto en 20dp
             }
 
-            val density = resources.displayMetrics.density
-            val dpValue = 8
-            val paddingPixel = (dpValue * density).toInt()
-
-            featuresContainer.addView(featureTextView)
-            featuresContainer.setPadding(
-                featuresContainer.paddingLeft,
-                featuresContainer.paddingTop,
-                featuresContainer.paddingRight,
-                paddingPixel
-            )
+            linearLayout.addView(featureTextView)
         }
+
+        scrollView.addView(linearLayout)
+        featuresContainer.addView(scrollView)
 
         view.findViewById<Button>(R.id.forwardBtn445).setOnClickListener {
             goToNextFragment()
         }
 
         return view
+
     }
 
 
@@ -88,6 +91,11 @@ class CharacterCreationFragmentTenth: Fragment() {
             putSerializable("personaje_key", personaje)
         }
         nextFragment.arguments = bundle
+
+        MediaPlayer.create(context, R.raw.pasar_pagina)?.apply {
+            start()
+            setOnCompletionListener { mp -> mp.release() }
+        }
 
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.frameLayout, nextFragment)?.addToBackStack(null)?.commit()

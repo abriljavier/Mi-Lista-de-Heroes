@@ -1,5 +1,6 @@
 package com.abriljavier.milistadeheroes.fragments
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -70,6 +71,11 @@ class CharacterCreationFragmentFourth : Fragment() {
             putSerializable("personaje_key", personaje)
         }
         nextFragment.arguments = bundle
+
+        MediaPlayer.create(context, R.raw.pasar_pagina)?.apply {
+            start()
+            setOnCompletionListener { mp -> mp.release() }
+        }
 
         activity?.supportFragmentManager?.beginTransaction()
             ?.replace(R.id.frameLayout, nextFragment)

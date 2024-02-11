@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="409dp"
-    android:layout_height="665dp">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/textView3"
@@ -16,6 +16,7 @@
         android:fontFamily="sans-serif"
         android:text="Escribe la edad del personaje"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,6 +33,7 @@
         android:fontFamily="sans-serif"
         android:text="Cuenta algo de su historia!"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,8 +66,8 @@
         android:gravity="start|top"
         android:inputType="textMultiLine"
         android:padding="10dp"
-        android:text="Name"
-        android:textSize="16sp"
+        android:text="Es huérfano, perdió a sus padres en la guerra y ahora busca venganza"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -81,7 +83,9 @@
         android:layout_marginBottom="460dp"
         android:ems="10"
         android:inputType="number"
+        android:text="22"
         android:textAlignment="center"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

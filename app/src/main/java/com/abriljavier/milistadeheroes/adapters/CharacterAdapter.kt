@@ -26,12 +26,20 @@ class CharacterAdapter(var characters: MutableList<Personaje>, private val onIte
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         val character = characters[position]
+        val context = holder.itemView.context
         holder.characterName.text = character.name
-        holder.charInfo.text = "${character.characterClass?.className} de nivel ${character.numLevel} "
+        holder.charInfo.text = "${character.characterClass?.className} de nivel ${character.numLevel}"
         if (!character.imageUri.isNullOrEmpty()) {
             holder.charImg.setImageURI(Uri.parse(character.imageUri))
         } else {
-            holder.charImg.setImageResource(R.drawable.barbarian)
+            val className = character.characterClass?.className!!.toLowerCase()
+            val resourceName = className ?: "Default"
+            val resourceId = context.resources.getIdentifier(resourceName, "drawable", context.packageName)
+            if (resourceId != 0) {
+                holder.charImg.setImageResource(resourceId)
+            } else {
+                holder.charImg.setImageResource(R.drawable.default_avatar)
+            }
         }
         holder.itemView.setOnClickListener {
             onItemClick.invoke(character)

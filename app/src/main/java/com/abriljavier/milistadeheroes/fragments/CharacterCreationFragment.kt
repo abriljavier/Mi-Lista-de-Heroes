@@ -1,5 +1,6 @@
 package com.abriljavier.milistadeheroes.fragments
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -73,6 +74,11 @@ class CharacterCreationFragment : Fragment() {
 
             val nextFragment = CharacterCreationFragmentSecond().apply {
                 arguments = bundle
+            }
+
+            MediaPlayer.create(context, R.raw.pasar_pagina)?.apply {
+                start()
+                setOnCompletionListener { mp -> mp.release() }
             }
 
             parentFragmentManager.beginTransaction().replace(R.id.frameLayout, nextFragment)

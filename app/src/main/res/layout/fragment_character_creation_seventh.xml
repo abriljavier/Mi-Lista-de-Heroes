@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="409dp"
-    android:layout_height="665dp">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/textView3"
@@ -16,6 +16,7 @@
         android:fontFamily="sans-serif"
         android:text="Selecciona un alineamiento"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,6 +46,7 @@
         android:fontFamily="sans-serif"
         android:text="Escribe la apariencia de tu personaje!"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,8 +79,8 @@
         android:gravity="start|top"
         android:inputType="textMultiLine"
         android:padding="10dp"
-        android:text="Name"
-        android:textSize="16sp"
+        android:text="Pelo rojo, con ojos violetas, y un tatuaje de una calavera en el hombro"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import android.Manifest
+import android.media.MediaPlayer
 import com.abriljavier.milistadeheroes.R
 import com.abriljavier.milistadeheroes.dataclasses.Personaje
 
@@ -70,6 +71,10 @@ class CharacterCreationFragmentThird : Fragment() {
         }
         val nextFragment = CharacterCreationFragmentFourth().apply {
             arguments = bundle
+        }
+        MediaPlayer.create(context, R.raw.pasar_pagina)?.apply {
+            start()
+            setOnCompletionListener { mp -> mp.release() }
         }
 
         activity?.supportFragmentManager?.beginTransaction()

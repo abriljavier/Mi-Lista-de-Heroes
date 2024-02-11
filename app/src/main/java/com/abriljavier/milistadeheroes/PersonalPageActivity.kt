@@ -5,13 +5,16 @@ import com.abriljavier.milistadeheroes.adapters.CharacterAdapter
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ListView
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -22,14 +25,13 @@ import com.abriljavier.milistadeheroes.adapters.CustomAdapter
 import com.abriljavier.milistadeheroes.dataclasses.AttributesPJ
 import com.abriljavier.milistadeheroes.dataclasses.Personaje
 
-private lateinit var toolbar: Toolbar
-private lateinit var dialog: AlertDialog
-
 class PersonalPageActivity : AppCompatActivity() {
 
+    private lateinit var toolbar: Toolbar
+    private lateinit var dialog: AlertDialog
     private lateinit var charactersRecyclerView: RecyclerView
-    private lateinit var characterAdapter: CharacterAdapter
     private var userId: Int = -1
+    private lateinit var characterAdapter: CharacterAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,38 +40,32 @@ class PersonalPageActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val welcomeMsg = findViewById<TextView>(R.id.welcomeMsg)
-        val userName = intent.getStringExtra("user_name")
-
-        charactersRecyclerView = findViewById(R.id.recycleView)
-        val gridLayoutManager = GridLayoutManager(this, 2)
-        charactersRecyclerView.layoutManager = gridLayoutManager
-
-        val dbHelper = DatabaseHelper(this)
         userId = intent.getIntExtra("user_id", -1)
-        val characters = dbHelper.getPersonajesByUserId(userId)
-        for (c in characters){
-            println(c.background)
-        }
-        if (characters.isEmpty()) {
-            welcomeMsg.text =
-                "Bienvenido $userName, todavía no tienes personajes, comienza creando uno"
-        } else {
-            welcomeMsg.text = "Bienvenido $userName, selecciona uno de tus personajes"
-            characterAdapter = CharacterAdapter(characters) { character ->
-                showCharacterDialog(character, this, userId, characterAdapter)
-            }
-            charactersRecyclerView.adapter = characterAdapter
-            updateCharactersList(userId, this, characterAdapter)
+        val userName = intent.getStringExtra("user_name") ?: "Usuario"
+
+        charactersRecyclerView = findViewById<RecyclerView>(R.id.recycleView).apply {
+            layoutManager = GridLayoutManager(this@PersonalPageActivity, 2)
         }
 
+        characterAdapter = CharacterAdapter(mutableListOf()) { character ->
+            showCharacterDialog(character, this, userId)
+        }
+        charactersRecyclerView.adapter = characterAdapter
+
+        updateCharactersList()
+
+        val welcomeMsg = findViewById<TextView>(R.id.welcomeMsg)
+        welcomeMsg.text = if (characterAdapter.itemCount == 0) {
+            "Bienvenido $userName, todavía no tienes personajes, comienza creando uno"
+        } else {
+            "Bienvenido $userName, selecciona uno de tus personajes"
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        if(::characterAdapter.isInitialized) {
-            updateCharactersList(userId, this, characterAdapter)
-        }
+        println("ENtro en el onResume")
+        updateCharactersList()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -112,160 +108,198 @@ class PersonalPageActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateCharactersList() {
+        val dbHelper = DatabaseHelper(this)
+        val characters = dbHelper.getPersonajesByUserId(userId)
+        characterAdapter.updateData(characters)
 
-}
-private fun updateCharactersList(userId: Int, context: Context, characterAdapter: CharacterAdapter) {
-    val dbHelper = DatabaseHelper(context)
-    val characters = dbHelper.getPersonajesByUserId(userId)
-    println(characters)
-    characterAdapter.updateData(characters)
-    characterAdapter.notifyDataSetChanged()
-}
-
-private fun showCharacterDialog(character: Personaje, context: Context, userId: Int, characterAdapter: CharacterAdapter) {
-    val dbHelper = DatabaseHelper(context)
-    val dialogView = LayoutInflater.from(context).inflate(R.layout.show_character_dialog, null)
-
-
-    val listView: ListView = dialogView.findViewById(R.id.listView)
-    val characterImage = dialogView.findViewById<ImageView>(R.id.infoImageView)
-    val characterName = dialogView.findViewById<TextView>(R.id.charNameText)
-    val charInfo = dialogView.findViewById<TextView>(R.id.textView17)
-    val attributesText = formatAttributes(character.attributes)
-    val charInfoStatsText: TextView = dialogView.findViewById(R.id.charInfoStatsText)
-    charInfoStatsText.text = attributesText
-
-    characterName.text = character.name
-    charInfo.setText("${character.characterClass?.className} de nivel ${character.numLevel} ")
-    val competenciesFormatted = character.competiences.joinToString().replace("[", "").replace("]", "").replace("\"", "")
-    val dataToShow = listOf(
-        "Competencias: $competenciesFormatted",
-        "Alineamiento: ${character.selectedAlignment}",
-        "Edad: ${character.age}",
-        "Idiomas: ${character.languages}"
-    )
-    val adapter = CustomAdapter(context, dataToShow)
-    listView.adapter = adapter
-
-    val dialogBuilder = AlertDialog.Builder(context)
-    dialogBuilder.setView(dialogView)
-    val dialog = dialogBuilder.create()
-
-    val nextPageBtn = dialogView.findViewById<Button>(R.id.nextPageBtn)
-    nextPageBtn.setOnClickListener {
-        dialog.dismiss()
-        showSecondDialog(character, context, userId, characterAdapter)
+        val welcomeMsg = findViewById<TextView>(R.id.welcomeMsg)
+        val userName = intent.getStringExtra("user_name") ?: "Usuario"
+        welcomeMsg.text = if (characters.isEmpty()) {
+            "Bienvenido $userName, todavía no tienes personajes, comienza creando uno"
+        } else {
+            "Bienvenido $userName, selecciona uno de tus personajes"
+        }
     }
 
-    val deleteBtn: Button = dialogView.findViewById(R.id.deleteBtn)
-    deleteBtn.setOnClickListener {
-        AlertDialog.Builder(context).apply {
-            setTitle("Eliminar personaje")
-            setMessage("¿Estás seguro de querer eliminar este personaje?")
-            setPositiveButton("Eliminar") { dialogInterface, i ->
-                if (character.pj_id?.let { it1 -> dbHelper.deleteCharacter(it1) } == true) {
-                    Toast.makeText(
-                        context, "Personaje eliminado", Toast.LENGTH_SHORT
-                    ).show()
-                    dialog.dismiss()
-                    updateCharactersList(userId, context, characterAdapter)
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Error al eliminar personaje",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+
+    private fun showCharacterDialog(
+        character: Personaje, context: Context, userId: Int
+    ) {
+        val dbHelper = DatabaseHelper(context)
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.show_character_dialog, null)
+
+
+        val listView: ListView = dialogView.findViewById(R.id.listView)
+        var characterImage = dialogView.findViewById<ImageView>(R.id.infoImageView)
+        val characterName = dialogView.findViewById<TextView>(R.id.charNameText)
+        val charInfo = dialogView.findViewById<TextView>(R.id.textView17)
+        val attributesText = formatAttributes(character.attributes)
+        val charInfoStatsText: TextView = dialogView.findViewById(R.id.charInfoStatsText)
+        charInfoStatsText.text = attributesText
+
+        val imageUriString = character.imageUri
+
+        if (imageUriString.isNullOrEmpty()) {
+            val className = character.characterClass?.className!!.toLowerCase()
+            val resourceName = className ?: "Default"
+            val resourceId =
+                context.resources.getIdentifier(resourceName, "drawable", context.packageName)
+
+            if (resourceId != 0) {
+                characterImage.setImageResource(resourceId)
+            } else {
+                characterImage.setImageResource(R.drawable.default_avatar)
             }
-            setNegativeButton("Cancelar", null)
-        }.show()
-    }
-
-    val levelUpBtn: Button = dialogView.findViewById(R.id.levelUpBtn)
-    levelUpBtn.setOnClickListener {
-        val newLevel = character.numLevel!!.plus(1)
-
-        dialog.dismiss()
-
-        val intent = Intent(context, LevelUpActivity::class.java).apply {
-            putExtra("characterId", character.pj_id)
-            putExtra("newLevel", newLevel)
-            putExtra("charClass", character.characterClass!!.classId!!)
+        } else {
+            val imageUri = Uri.parse(imageUriString)
+            characterImage.setImageURI(imageUri)
         }
 
-        context.startActivity(intent)
+        characterName.text = character.name
+        charInfo.setText("${character.characterClass?.className} de nivel ${character.numLevel} ")
+        val competenciesFormatted =
+            character.competiences.joinToString().replace("[", "").replace("]", "")
+                .replace("\"", "")
+        val dataToShow = listOf(
+            "Competencias: $competenciesFormatted",
+            "Alineamiento: ${character.selectedAlignment}",
+            "Edad: ${character.age}",
+            "Idiomas: ${character.languages}"
+        )
+        val adapter = CustomAdapter(context, dataToShow)
+        listView.adapter = adapter
 
-        dialog.dismiss()
+        val dialogBuilder = AlertDialog.Builder(context)
+        dialogBuilder.setView(dialogView)
+        val dialog = dialogBuilder.create()
 
+        val nextPageBtn = dialogView.findViewById<Button>(R.id.nextPageBtn)
+        nextPageBtn.setOnClickListener {
+            dialog.dismiss()
+            showSecondDialog(character, userId)
+        }
+
+        val deleteBtn: Button = dialogView.findViewById(R.id.deleteBtn)
+        deleteBtn.setOnClickListener {
+            AlertDialog.Builder(context).apply {
+                setTitle("Eliminar personaje")
+                setMessage("¿Estás seguro de querer eliminar este personaje?")
+                setPositiveButton("Eliminar") { dialogInterface, i ->
+                    if (character.pj_id?.let { it1 -> dbHelper.deleteCharacter(it1) } == true) {
+                        Toast.makeText(
+                            context, "Personaje eliminado", Toast.LENGTH_SHORT
+                        ).show()
+                        dialog.dismiss()
+                        updateCharactersList()
+                    } else {
+                        Toast.makeText(
+                            context, "Error al eliminar personaje", Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                setNegativeButton("Cancelar", null)
+            }.show()
+        }
+
+        val levelUpBtn: Button = dialogView.findViewById(R.id.levelUpBtn)
+        levelUpBtn.setOnClickListener {
+            val newLevel = character.numLevel!!.plus(1)
+
+            dialog.dismiss()
+
+            val intent = Intent(context, LevelUpActivity::class.java).apply {
+                putExtra("characterId", character.pj_id)
+                putExtra("newLevel", newLevel)
+                putExtra("charClass", character.characterClass!!.classId!!)
+            }
+
+            context.startActivity(intent)
+
+            dialog.dismiss()
+
+        }
+        dialog.show()
     }
-    dialog.show()
-}
 
-private fun showSecondDialog(character: Personaje, context: Context, userId: Int, characterAdapter: CharacterAdapter) {
-    val secondDialogView = LayoutInflater.from(context).inflate(R.layout.second_show_character_dialog, null)
-    val listView: ListView = secondDialogView.findViewById(R.id.bg_list)
-    val background = character.background
-    val detailsList = mutableListOf<String>()
-    val nextDialogBtn2: Button = secondDialogView.findViewById(R.id.nextDialogBtn2)
-    val previousDialogBtn2: Button = secondDialogView.findViewById(R.id.previousDialogBtn2)
+    private fun showSecondDialog(
+        character: Personaje, userId: Int
+    ) {
+        val secondDialogView =
+            LayoutInflater.from(this).inflate(R.layout.second_show_character_dialog, null)
+        val listView: ListView = secondDialogView.findViewById(R.id.bg_list)
+        val background = character.background
+        val detailsList = mutableListOf<String>()
+        val nextDialogBtn2: Button = secondDialogView.findViewById(R.id.nextDialogBtn2)
+        val previousDialogBtn2: Button = secondDialogView.findViewById(R.id.previousDialogBtn2)
+        val appearanceTextView = secondDialogView.findViewById<TextView>(R.id.appearanceTextView)
+        val textView21 = secondDialogView.findViewById<TextView>(R.id.textView21)
 
-    background?.traits?.flaws?.forEach { (key, value) ->
-        detailsList.add("Defecto $key: $value")
-    }
-    background?.traits?.ideals?.forEach { (key, value) ->
-        detailsList.add("Ideal $key: $value")
-    }
-    background?.traits?.links?.forEach { (key, value) ->
-        detailsList.add("Vínculo $key: $value")
-    }
-    background?.traits?.personalityTraits?.forEach { (key, value) ->
-        detailsList.add("Rasgo de personalidad $key: $value")
-    }
 
-    val adapter = BackgroundAdapter(context, detailsList)
-    listView.adapter = adapter
+        background?.traits?.flaws?.forEach { (key, value) ->
+            detailsList.add("Defecto $key: $value")
+        }
+        background?.traits?.ideals?.forEach { (key, value) ->
+            detailsList.add("Ideal $key: $value")
+        }
+        background?.traits?.links?.forEach { (key, value) ->
+            detailsList.add("Vínculo $key: $value")
+        }
+        background?.traits?.personalityTraits?.forEach { (key, value) ->
+            detailsList.add("Rasgo de personalidad $key: $value")
+        }
 
-    val secondDialogBuilder = AlertDialog.Builder(context)
-    secondDialogBuilder.setView(secondDialogView)
-    val secondDialog = secondDialogBuilder.create()
+        val adapter = BackgroundAdapter(this, detailsList)
+        listView.adapter = adapter
 
-    nextDialogBtn2.setOnClickListener {
-        secondDialog.dismiss()
-        showThirdDialog(character, context, userId, characterAdapter)
-    }
+        val secondDialogBuilder = AlertDialog.Builder(this)
+        secondDialogBuilder.setView(secondDialogView)
+        val secondDialog = secondDialogBuilder.create()
 
-    previousDialogBtn2.setOnClickListener {
-        secondDialog.dismiss()
-        showCharacterDialog(character, context, userId, characterAdapter)
-    }
 
-    secondDialog.show()
-}
+        textView21.text = character.history
+        appearanceTextView.text = character.appearance
 
-private fun showThirdDialog(character: Personaje, context: Context,userId: Int, characterAdapter: CharacterAdapter) {
-    val thirdDialogView = LayoutInflater.from(context).inflate(R.layout.third_show_character_dialog, null)
-    val notesTextView: TextView = thirdDialogView.findViewById(R.id.notesDialogTextView)
-    val previousDialogBtn3: Button = thirdDialogView.findViewById(R.id.previousDialogBtn3)
+        nextDialogBtn2.setOnClickListener {
+            secondDialog.dismiss()
+            showThirdDialog(character, this, userId)
+        }
 
-    notesTextView.text = character.notes ?: "No hay notas disponibles."
+        previousDialogBtn2.setOnClickListener {
+            secondDialog.dismiss()
+            showCharacterDialog(character, this, userId)
+        }
 
-    val thirdDialogBuilder = AlertDialog.Builder(context)
-    thirdDialogBuilder.setView(thirdDialogView)
-    val thirdDialog = thirdDialogBuilder.create()
-
-    previousDialogBtn3.setOnClickListener {
-        thirdDialog.dismiss()
-        showSecondDialog(character, context, userId, characterAdapter)
+        secondDialog.show()
     }
 
-    thirdDialog.show()
-}
+    private fun showThirdDialog(
+        character: Personaje, context: Context, userId: Int
+    ) {
+        val thirdDialogView =
+            LayoutInflater.from(context).inflate(R.layout.third_show_character_dialog, null)
+        val notesTextView: TextView = thirdDialogView.findViewById(R.id.notesDialogTextView)
+        val previousDialogBtn3: Button = thirdDialogView.findViewById(R.id.previousDialogBtn3)
+        val textViewJavi = thirdDialogView.findViewById<TextView>(R.id.textViewJavi)
+        textViewJavi.text = character.notes ?: "No hay notas disponibles."
 
-private fun formatAttributes(attributes: AttributesPJ?): String {
-    if (attributes == null) {
-        return "No hay estadísticas disponibles"
+        val thirdDialogBuilder = AlertDialog.Builder(context)
+        thirdDialogBuilder.setView(thirdDialogView)
+        val thirdDialog = thirdDialogBuilder.create()
+
+        previousDialogBtn3.setOnClickListener {
+            thirdDialog.dismiss()
+            showSecondDialog(character, userId)
+        }
+
+        thirdDialog.show()
     }
-    return """
+
+    private fun formatAttributes(attributes: AttributesPJ?): String {
+        if (attributes == null) {
+            return "No hay estadísticas disponibles"
+        }
+        return """
         Fuerza: ${attributes.STR}
         Destreza: ${attributes.DEX}
         Constitución: ${attributes.CON}
@@ -273,4 +307,5 @@ private fun formatAttributes(attributes: AttributesPJ?): String {
         Sabiduría: ${attributes.WIS}
         Carisma: ${attributes.CHA}
     """.trimIndent()
+    }
 }

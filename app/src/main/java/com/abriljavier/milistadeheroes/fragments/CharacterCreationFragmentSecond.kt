@@ -1,8 +1,7 @@
 package com.abriljavier.milistadeheroes.fragments
 
-import android.graphics.drawable.Drawable
+import android.media.MediaPlayer
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -74,18 +73,18 @@ class CharacterCreationFragmentSecond : Fragment() {
 
         // LA IMAGEN QUE ACOMPAÑA AL SPINNER
         val classImageMap = mapOf<String, Int>(
-            "Barbaro" to R.drawable.barbarian,
-            "Bardo" to R.drawable.bard,
-            "Brujo" to R.drawable.warlock,
-            "Clerigo" to R.drawable.cleric,
-            "Druida" to R.drawable.druid,
-            "Explorador" to R.drawable.explorer,
-            "Guerrero" to R.drawable.warrior,
-            "Hechicero" to R.drawable.sorcerer,
-            "Mago" to R.drawable.wizard,
-            "Monje" to R.drawable.monk,
-            "Paladin" to R.drawable.pala,
-            "Picaro" to R.drawable.rogue,
+            "Barbaro" to R.drawable.barbaro,
+            "Bardo" to R.drawable.bardo,
+            "Brujo" to R.drawable.brujo,
+            "Clerigo" to R.drawable.clerigo,
+            "Druida" to R.drawable.druida,
+            "Explorador" to R.drawable.explorador,
+            "Guerrero" to R.drawable.guerrero,
+            "Hechicero" to R.drawable.hechicero,
+            "Mago" to R.drawable.mago,
+            "Monje" to R.drawable.monje,
+            "Paladin" to R.drawable.paladin,
+            "Picaro" to R.drawable.picaro,
         )
 
         // EL SPINNER
@@ -96,13 +95,13 @@ class CharacterCreationFragmentSecond : Fragment() {
             ) {
                 selectedClasse = classes[position]
                 val className = selectedClasse?.className
-                val imageResId = classImageMap[className] ?: R.drawable.barbarian
+                val imageResId = classImageMap[className] ?: R.drawable.barbaro
                 classIcon.setImageResource(imageResId)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
                 selectedClasse = classes[0]
-                classIcon.setImageResource(R.drawable.barbarian)
+                classIcon.setImageResource(R.drawable.barbaro)
             }
         }
 
@@ -129,6 +128,10 @@ class CharacterCreationFragmentSecond : Fragment() {
             }
             val nextFragment = CharacterCreationFragmentThird().apply {
                 arguments = bundle
+            }
+            MediaPlayer.create(context, R.raw.pasar_pagina)?.apply {
+                start()
+                setOnCompletionListener { mp -> mp.release() }
             }
 
             parentFragmentManager.beginTransaction().replace(R.id.frameLayout, nextFragment)
