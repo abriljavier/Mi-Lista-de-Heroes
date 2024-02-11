@@ -184,22 +184,18 @@ private fun showCharacterDialog(character: Personaje, context: Context, userId: 
     val levelUpBtn: Button = dialogView.findViewById(R.id.levelUpBtn)
     levelUpBtn.setOnClickListener {
         val newLevel = character.numLevel!!.plus(1)
-        val classId = character.characterClass?.classId ?: 0
 
-        val newFeatures = dbHelper.updateCharacterLevelAndFeatures(character.pj_id!!, newLevel, classId)
-
-        character.numLevel = newLevel
-        val newFeaturesAsString = newFeatures.map { "${it.featureName}: ${it.description}" }
-        character.featuresByLevel.addAll(newFeaturesAsString)
-//        updateCharactersList(userId, context, characterAdapter)
-        val position = characterAdapter.characters.indexOfFirst { it.pj_id == character.pj_id }
-        if (position != -1) {
-            characterAdapter.characters[position] = character // Actualiza el personaje en la lista
-            characterAdapter.notifyItemChanged(position) // Notifica al adaptador solo sobre este cambio
-        }
         dialog.dismiss()
 
-        Toast.makeText(context, "Personaje subido a nivel $newLevel", Toast.LENGTH_SHORT).show()
+        val intent = Intent(context, LevelUpActivity::class.java).apply {
+            putExtra("characterId", character.pj_id)
+            putExtra("newLevel", newLevel)
+            putExtra("charClass", character.characterClass!!.classId!!)
+        }
+
+        context.startActivity(intent)
+
+        dialog.dismiss()
 
     }
     dialog.show()

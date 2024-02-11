@@ -433,20 +433,51 @@ class DatabaseHelper(context: Context) :
         return deletedRows > 0
     }
 
-    fun getFeaturesByClassIdAndLevel(classId: Int, level: Int): List<Level> {
-        val levels = mutableListOf<Level>()
+    fun getFeaturesByClassIdAndLevel(classId: Int, level: Int): MutableMap<String, String> {
+        val levels = mutableMapOf<String, String>()
         val db = this.readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM class_levels WHERE class_id = ? AND level = ?", arrayOf(classId.toString(), level.toString()))
 
-        if (cursor.moveToFirst()) {
+        val cursorClass = db.rawQuery("SELECT hit_die FROM classes WHERE class_id = ?", arrayOf(classId.toString()))
+        if (cursorClass.moveToFirst()) {
+            val hitDie = cursorClass.getString(0)
+            levels["hitDie"] = hitDie
+        }
+        cursorClass.close()
+        val cursorFeatures = db.rawQuery("SELECT * FROM class_levels WHERE class_id = ? AND level = ?", arrayOf(classId.toString(), level.toString()))
+        if (cursorFeatures.moveToFirst()) {
             do {
-                val featureName = cursor.getString(3)
-                val description = cursor.getString(4)
-                levels.add(Level(featureName = featureName, description = description))
-            } while (cursor.moveToNext())
+                val featureName = cursorFeatures.getString(3)
+                val description = cursorFeatures.getString(4)
+                levels[featureName] = description
+            } while (cursorFeatures.moveToNext())
+        }
+        cursorFeatures.close()
+
+        return levels
+    }
+
+    fun getCharacterHitPoints(characterId: Int): Int{
+        val db = this.readableDatabase
+        var hitPoints = 0
+        val cursor = db.query(
+            "personajes",
+            arrayOf("hitPoints"),
+            "personaje_id = ?",
+            arrayOf(characterId.toString()),
+            null,
+            null,
+            null
+        )
+        if (cursor.moveToFirst()) {
+            hitPoints = cursor.getInt(cursor.getColumnIndexOrThrow("hitPoints"))
         }
         cursor.close()
-        return levels
+        return hitPoints
+    }
+
+    fun updateCharacterLevelAndHitPoints(characterId: Int, newHitPoints: Int) {
+        val db = this.writableDatabase
+        db.execSQL("UPDATE personajes SET level = level + 1, hitPoints = ? WHERE personaje_id = ?", arrayOf(newHitPoints, characterId))
     }
 
     fun updateCharacterLevelAndFeatures(personajeId: Int, newLevel: Int, classId: Int): MutableList<Level> {

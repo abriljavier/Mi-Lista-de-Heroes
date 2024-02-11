@@ -90,6 +90,7 @@
         android:layout_marginTop="258dp"
         android:layout_marginEnd="135dp"
         android:layout_marginBottom="337dp"
+        android:backgroundTint="@color/details"
         android:text="Lanzar!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
